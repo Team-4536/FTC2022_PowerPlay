@@ -14,6 +14,7 @@
  * which will pick up this file here. This approach allows makes it easier to integrate
  * updates to the FTC SDK into your code.
  */
+//file:noinspection GroovyDocCheck
 
 import java.util.regex.Pattern
 
@@ -111,9 +112,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    packagingOptions {
-        pickFirst '**/*.so'
-    }
     sourceSets.main {
         jni.srcDirs = []
         jniLibs.srcDir rootProject.file('libs')

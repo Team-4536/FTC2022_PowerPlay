@@ -1,0 +1,19 @@
+
+
+TODO: Telemetry text formatting system or something - Rob
+TODO: tensorflow interface
+TODO: fix the bot turning while strafing                  - Rob/unchecked
+TODO: how are tensorflow events going to affect program flow?
+TODO: absolute movement, not bot angle dependant          - Rob/unchecked
+TODO: tune diving constants
+TODO: check out how to find bot position based on accelerometer
+TODO: v3 class
+TODO: BN0O calibration?
+
+
+TODO: TESTING
+figure out what the default axis order is for the imu
+check that DT is being calculated correctly //
+double check drive setPower() fn
+check that v2f rotate fns work properly
+check that updateDrive behaves as expected
