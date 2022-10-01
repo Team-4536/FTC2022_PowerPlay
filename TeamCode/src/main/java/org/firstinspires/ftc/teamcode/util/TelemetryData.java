@@ -28,6 +28,10 @@ public class TelemetryData{
         this.title = _name;
         this.info = String.valueOf(_info);
     }
+    public TelemetryData(@NonNull String _name, float _info){
+        this.title = _name;
+        this.info = String.valueOf(_info);
+    }
     public TelemetryData(@NonNull String _name, V2f _info){
         this.title = _name;
         this.info = _info.x + ", " + _info.y;
@@ -38,6 +42,7 @@ public class TelemetryData{
 
     public void addChild(TelemetryData d){
         this.children.add(d);
+        d.parent = this;
     }
 
 
@@ -45,13 +50,14 @@ public class TelemetryData{
         int level = this.getLevel();
 
         String r = "";
+        //r = r + level + " ";
         for(int i = 0; i < level; i++){
-            r += Constants.telemetryIndent; }
+            r = r + Constants.telemetryIndent; }
 
 
         r += this.title + ": " + this.info + "\n";
         for (TelemetryData t : this.children) {
-            r += t.getString();
+            r = r + t.getString();
         }
 
         return r;

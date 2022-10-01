@@ -7,8 +7,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.util.Constants;
-import org.firstinspires.ftc.teamcode.util.Fptr;
 import org.firstinspires.ftc.teamcode.util.Hardware;
+import org.firstinspires.ftc.teamcode.util.PIDData;
 import org.firstinspires.ftc.teamcode.util.TelemetryData;
 import org.firstinspires.ftc.teamcode.util.V2f;
 
@@ -20,15 +20,16 @@ import org.firstinspires.ftc.teamcode.util.V2f;
 public abstract class DriveFS {
 
    //note: this is not normalized with time currently, see TODO
-   public static void updateDrive(Hardware s, TelemetryData t,
-                                  Fptr targetAngle, @NonNull V2f l, @NonNull V2f r){
+   public static void updateDrive(Hardware s, TelemetryData t, float dt,
+                                  PIDData PID, @NonNull V2f l, @NonNull V2f r){
 
       TelemetryData driveTelemetry = new TelemetryData("Drive");
       t.addChild(driveTelemetry);
 
       //change target angle with input
-      targetAngle.v = (float)(targetAngle.v + r.x * Constants.turnRate);
-      driveTelemetry.addChild(new TelemetryData("Target Angle", targetAngle.v));
+      //no idea with the x axis
+      PID.target = (float)(PID.target + -r.x * Constants.turnRate * dt);
+      driveTelemetry.addChild(new TelemetryData("Target Angle", PID.target));
 
 
       //get the dist to angle target
@@ -36,27 +37,31 @@ public abstract class DriveFS {
       Orientation heading = s.imu.getAngularOrientation(
               AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
       //axis returns angle flipped
-      float angle = -heading.firstAngle;
-      float angleDiff = DriveFS.angleWrap(angle - targetAngle.v);
-      if(angleDiff > 180){ angleDiff -= 360; }
+      float angle = heading.firstAngle;
+
+      float PIDOut = PIDFs.updatePIDAngular(PID, angle, dt);
       driveTelemetry.addChild(new TelemetryData("Angle", angle));
-      driveTelemetry.addChild(new TelemetryData("Angle diff", angleDiff));
+      driveTelemetry.addChild(new TelemetryData("PID power", PIDOut));
+
 
 
 
 
 
       //rotate drive input to be relative to start angle, not current angle
+      //i also have no idea why the x axis need to be flipped, but it just does
       V2f in = new V2f(
-              l.x * Constants.strafeMod,
+              -l.x * Constants.strafeMod,
               l.y * Constants.driveMod);
       in = in.rotated(-angle);
+      //what is with this flipping
       driveTelemetry.addChild(new TelemetryData("Drive", in));
 
 
 
 
 
+      /*
       //set turning to move towards target, clamped by MAX
       float nr = angleDiff;
       if(Math.abs(nr) > Constants.MaxTurnTargetDist){
@@ -67,13 +72,14 @@ public abstract class DriveFS {
       //clamp speed to max
       if(nr > Constants.MaxTurnSpeed) {
          nr = Constants.MaxTurnSpeed; }
+      */
 
       //set motors to apply
       DriveFS.setPower(
               s,
               in,
               //also check out PID controllers/smoothing fns
-              nr);
+              PIDOut);
    }
 
 
