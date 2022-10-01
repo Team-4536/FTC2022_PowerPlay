@@ -33,8 +33,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.functions.DriveFS;
 import org.firstinspires.ftc.teamcode.functions.TelemetryFS;
-import org.firstinspires.ftc.teamcode.util.Fptr;
 import org.firstinspires.ftc.teamcode.util.Hardware;
+import org.firstinspires.ftc.teamcode.util.PIDData;
 import org.firstinspires.ftc.teamcode.util.TelemetryData;
 import org.firstinspires.ftc.teamcode.util.V2f;
 
@@ -50,10 +50,10 @@ public class TeleOp extends LinearOpMode {
         Hardware hardware = new Hardware(this.hardwareMap);
         float prevTime = 0;
 
-        //float object, so refs can be passed to drive FS,
-        // caps types should be considered pointers
-        Fptr targetAngle = new Fptr();
-        targetAngle.v = 0;
+        PIDData driveTurningPID = new PIDData();
+        driveTurningPID.Kd = 0.5f;
+        driveTurningPID.Ki = -0.008f;
+        driveTurningPID.Kp = -0.01f;
 
         //endregion _________________________________________________
 
@@ -82,11 +82,10 @@ public class TeleOp extends LinearOpMode {
 
             //endregion ________________________________________________________________
 
-
             //set bot drive motors for direction,
             // update PID for turning,
             // send debug telemetry
-            DriveFS.updateDrive(hardware, telemetryData, targetAngle, l, r);
+            DriveFS.updateDrive(hardware, telemetryData, dt, driveTurningPID, l, r);
 
 
 
