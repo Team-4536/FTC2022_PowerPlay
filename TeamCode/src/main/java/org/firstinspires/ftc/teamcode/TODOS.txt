@@ -1,0 +1,9 @@
+
+
+TODO: tensorflow interface
+TODO: check out how to find bot position based on accelerometer
+TODO: v3 class
+TODO: BN0O calibration?
+
+
+TODO: tune diving constants                     - Rob
