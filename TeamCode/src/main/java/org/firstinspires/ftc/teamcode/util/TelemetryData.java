@@ -45,6 +45,15 @@ public class TelemetryData{
         d.parent = this;
     }
 
+    public void addChild(String a, String b){
+        TelemetryData t = new TelemetryData(a, b);
+        this.addChild(t);
+    }
+    public void addChild(String a, double b){
+        TelemetryData t = new TelemetryData(a, b);
+        this.addChild(t);
+    }
+
 
     public String getString(){
         int level = this.getLevel();

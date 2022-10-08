@@ -31,12 +31,14 @@ package org.firstinspires.ftc.teamcode.opModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.functions.DriveFS;
-import org.firstinspires.ftc.teamcode.functions.TelemetryFS;
+import org.firstinspires.ftc.teamcode.functions.DriveFNS;
+import org.firstinspires.ftc.teamcode.functions.NavFNS;
+import org.firstinspires.ftc.teamcode.functions.TelemetryFNS;
 import org.firstinspires.ftc.teamcode.util.Hardware;
 import org.firstinspires.ftc.teamcode.util.PIDData;
 import org.firstinspires.ftc.teamcode.util.TelemetryData;
 import org.firstinspires.ftc.teamcode.util.V2f;
+import org.firstinspires.ftc.teamcode.util.V3d;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="FTC 2022 TeleOp", group="Linear Opmode")
 public class TeleOp extends LinearOpMode {
@@ -46,15 +48,23 @@ public class TeleOp extends LinearOpMode {
 
         //region// Multi-Frame variables ____________________________
         this.telemetry.setCaptionValueSeparator("");
-
         Hardware hardware = new Hardware(this.hardwareMap);
-        float prevTime = 0;
+        double prevTime = 0;
 
+        //DRIVE
         PIDData driveTurningPID = new PIDData();
-        driveTurningPID.Kd = 0.5f;
-        driveTurningPID.Ki = -0.008f;
-        driveTurningPID.Kp = -0.01f;
+        driveTurningPID.Kd = -0.2f;
+        driveTurningPID.Ki = 0.0f;
+        driveTurningPID.Kp = 0.018f;
 
+        //NAV
+        V3d PosAccumulator = new V3d();
+        V3d VelAccumulator = new V3d();
+
+        //UPDATE INFO
+        int updateCount = 0;
+        int displayUpdateCount = 0;
+        double dtAcc = 0;
         //endregion _________________________________________________
 
 
@@ -66,32 +76,48 @@ public class TeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-
-
             //region// Frame specific variables _________________________________________
 
-            float dt = (float)hardware.time.seconds() - prevTime;
-            prevTime = (float)hardware.time.seconds();
+            double dt = hardware.time.seconds() - prevTime;
+            prevTime = hardware.time.seconds();
 
 
             V2f l = new V2f(this.gamepad1.left_stick_x, this.gamepad1.left_stick_y);
             V2f r = new V2f(this.gamepad1.right_stick_x, this.gamepad1.right_stick_y);
 
-
             TelemetryData telemetryData = new TelemetryData("State");
 
             //endregion ________________________________________________________________
 
+
+
+
+            dtAcc += dt;
+            updateCount++;
+            if(dtAcc > 1){
+                dtAcc = 0;
+                displayUpdateCount = updateCount;
+                updateCount = 0;
+            }
+            telemetryData.addChild("Updates/Sec", displayUpdateCount);
+
+
+
+            NavFNS.updateNav(hardware, telemetryData, dt, VelAccumulator, PosAccumulator);
+
+
             //set bot drive motors for direction,
             // update PID for turning,
             // send debug telemetry
-            DriveFS.updateDrive(hardware, telemetryData, dt, driveTurningPID, l, r);
+            DriveFNS.updateDrive(hardware, telemetryData, (float)dt, driveTurningPID, l,
+                    new V2f(r.x, r.y)
+            );
 
 
 
 
             //add hardware telemetry
-            telemetryData.addChild(TelemetryFS.hardware("Hardware", hardware));
+            telemetryData.addChild(TelemetryFNS.hardware("Hardware", hardware));
 
 
 

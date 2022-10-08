@@ -26,4 +26,13 @@ public class V2f {
                 this.x * cos - this.y * sin,
                 this.y * cos + this.x * sin);
     }
+
+    public float getAngleDeg(){
+        return (float)Math.toDegrees(Math.atan2(this.y, this.x));
+    }
+
+
+    public float length(){
+        return (float)Math.sqrt(this.x*this.x + this.y*this.y);
+    }
 }
