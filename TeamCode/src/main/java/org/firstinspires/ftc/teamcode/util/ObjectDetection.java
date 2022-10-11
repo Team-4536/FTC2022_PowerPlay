@@ -25,10 +25,10 @@ public class ObjectDetection {
     private VuforiaLocalizer vuforia;
 
 
-    private TFObjectDetector tfod;
+    public TFObjectDetector tfod;
 
 
-    public ObjectDetection(TelemetryData telemetry){
+    public ObjectDetection(){
         initVuforia();
         initTfod();
 
