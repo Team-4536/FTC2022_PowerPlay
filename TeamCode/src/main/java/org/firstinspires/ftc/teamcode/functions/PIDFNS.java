@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.functions;
 
 import org.firstinspires.ftc.teamcode.util.PIDData;
 
-public abstract class PIDFs {
+public abstract class PIDFNS {
 
-    public static float updatePID(PIDData d, float pos, float dt){
+    /*public static float updatePID(PIDData d, float pos, float dt){
 
         //all code yoinked from ctrl alt ftc thanks lol
 
@@ -22,7 +22,7 @@ public abstract class PIDFs {
         d.prevErr = error;
 
         return out;
-    }
+    }*/
 
 
 
@@ -31,7 +31,7 @@ public abstract class PIDFs {
         //all code yoinked from ctrl alt ftc thanks lol
 
         // calculate the error in degrees
-        float error = DriveFS.angleWrap(d.target - pos);
+        float error = PIDFNS.angleWrap(d.target - pos);
         while(error > 180){ error -= 360; }
 
         // rate of change of the error
@@ -45,6 +45,19 @@ public abstract class PIDFs {
         d.prevErr = error;
 
         return out;
+    }
+
+
+
+
+
+
+    // This function normalizes the angle so it returns a value between -180° and 180° instead of 0° to 360°.
+    //YOINK https://www.ctrlaltftc.com/practical-examples/controlling-heading
+    public static float angleWrap(float deg) {
+
+        float modifiedAngle = deg % 360;
+        return ((modifiedAngle + 360) % 360);
     }
 
 }

@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.util.TelemetryData;
 //Telemetry functions for sending back bot info.
 //all of these only return a string (FORMATTING), that can be sent telemetry after
 //ex. TelemetryFS.dcMotor() will return a string with all the info abt a motor
-public abstract class TelemetryFS {
+public abstract class TelemetryFNS {
 
 
 
