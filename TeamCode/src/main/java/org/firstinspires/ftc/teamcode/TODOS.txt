@@ -1,9 +1,12 @@
 
+TODO: Touch grass
+
 
 TODO: tensorflow interface
-TODO: check out how to find bot position based on accelerometer
-TODO: v3 class
-TODO: BN0O calibration?
+TODO: BNO0 calibration? // in examples!
+TODO: nav image positioning
 
 
-TODO: tune diving constants                     - Rob
+
+
+

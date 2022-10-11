@@ -38,8 +38,6 @@ public class Hardware {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        //parameters.mode = BNO055IMU.SensorMode.ACCGYRO;
-        //parameters.accelerationIntegrationAlgorithm = null;
         imu.initialize(parameters);
 
 
@@ -52,9 +50,9 @@ public class Hardware {
         this.BLDrive  = map.get(DcMotor.class, "back_left_drive");
         this.BRDrive = map.get(DcMotor.class, "back_right_drive");
 
-        FLDrive.setDirection(DcMotor.Direction.FORWARD);
-        FRDrive.setDirection(DcMotor.Direction.REVERSE);
-        BLDrive.setDirection(DcMotor.Direction.FORWARD);
-        BRDrive.setDirection(DcMotor.Direction.REVERSE);
+        FRDrive.setDirection(DcMotor.Direction.FORWARD);
+        FLDrive.setDirection(DcMotor.Direction.REVERSE);
+        BRDrive.setDirection(DcMotor.Direction.FORWARD);
+        BLDrive.setDirection(DcMotor.Direction.REVERSE);
     }
 }
