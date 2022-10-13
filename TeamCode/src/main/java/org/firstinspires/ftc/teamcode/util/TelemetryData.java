@@ -32,6 +32,10 @@ public class TelemetryData{
         this.title = _name;
         this.info = String.valueOf(_info);
     }
+    public  TelemetryData(@NonNull String _name, boolean _info){
+        this.title = _name;
+        this.info = _info?"true":"false";
+    }
     public TelemetryData(@NonNull String _name, V2f _info){
         this.title = _name;
         this.info = _info.x + ", " + _info.y;
@@ -45,12 +49,16 @@ public class TelemetryData{
         d.parent = this;
     }
 
-    public void addChild(String a, String b){
+    public void addChild(@NonNull String a, String b){
         TelemetryData t = new TelemetryData(a, b);
         this.addChild(t);
     }
-    public void addChild(String a, double b){
+    public void addChild(@NonNull String a, double b){
         TelemetryData t = new TelemetryData(a, b);
+        this.addChild(t);
+    }
+    public void addChild(@NonNull String a, boolean b){
+        TelemetryData t = new TelemetryData(a, b?"true":"false");
         this.addChild(t);
     }
 
@@ -78,6 +86,11 @@ public class TelemetryData{
         }else{
             return this.parent.getLevel() + 1;
         }
+    }
+
+
+    public void clear(){
+        this.children.clear();
     }
 
 }

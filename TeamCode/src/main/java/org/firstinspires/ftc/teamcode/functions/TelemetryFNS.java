@@ -2,7 +2,8 @@ package org.firstinspires.ftc.teamcode.functions;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.util.Hardware;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.util.StaticData;
 import org.firstinspires.ftc.teamcode.util.TelemetryData;
 
 //Telemetry functions for sending back bot info.
@@ -12,20 +13,18 @@ public abstract class TelemetryFNS {
 
 
 
-    public static TelemetryData hardware(String name, Hardware s) {
+    public static TelemetryData hardware(String name, StaticData s) {
 
         TelemetryData r = new TelemetryData();
         r.title = name;
 
 
-        r.addChild(new TelemetryData("Time", s.time.seconds()));
+        r.addChild(new TelemetryData("Time", s.timer.seconds()));
         r.addChild(dcMotor("FL Drive:", s.FLDrive));
         r.addChild(dcMotor("FR Drive:", s.FRDrive));
         r.addChild(dcMotor("BL Drive:", s.BLDrive));
         r.addChild(dcMotor("BR Drive:", s.BRDrive));
         //NTS: add IMU telemetry plz
-
-
 
 
         return r;
@@ -41,6 +40,11 @@ public abstract class TelemetryFNS {
     }
 
 
+    public static void sendTelemetry(Telemetry t, TelemetryData m){
+        t.addLine(m.getString());
+        t.update();
+        m.clear();
+    }
 
 }
 
