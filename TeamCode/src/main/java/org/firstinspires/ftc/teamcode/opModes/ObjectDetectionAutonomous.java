@@ -77,7 +77,13 @@ public class ObjectDetectionAutonomous extends LinearOpMode {
 
                 for (Recognition recognition : updatedRecognitions) {
                    if(recognition.getLabel() == "1 Bolt"){
-                       
+                       telemetry.addData("Object Detected", "Bolt");
+                   }
+                   if(recognition.getLabel() == "2 Bulb"){
+                       telemetry.addData("Object Detected", "Bulb");
+                   }
+                   if(recognition.getLabel() == "3 Panel"){
+                       telemetry.addData("Object Detected", "Panel");
                    }
 
                 }
