@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.util;
 
-
 public class V2f {
     public float x = 0;
     public float y = 0;
