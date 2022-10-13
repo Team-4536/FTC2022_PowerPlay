@@ -22,7 +22,7 @@ public class MechTeleOp extends LinearOpMode {
         StaticData s = new StaticData(
                 this.hardwareMap,
                 new PIDSettings(0.018f, 0.0f, -0.2f),
-                new boolean[] { false, true, false, true } );
+                new boolean[] { true, false, true, false } );
 
         DynamicData d = new DynamicData();
 
@@ -35,10 +35,10 @@ public class MechTeleOp extends LinearOpMode {
 
             V2f l = new V2f(
                     this.gamepad1.left_stick_x,
-                    this.gamepad1.left_stick_y);
+                    -this.gamepad1.left_stick_y);
             V2f r = new V2f(
                     this.gamepad1.right_stick_x,
-                    this.gamepad1.right_stick_y);
+                    -this.gamepad1.right_stick_y);
 
 
 
@@ -54,7 +54,7 @@ public class MechTeleOp extends LinearOpMode {
 
             //change target angle with input
             if(r.length() != 0){
-                d.drivePID.target = PIDFNS.angleWrap(-r.getAngleDeg() - 90); }
+                d.drivePID.target = PIDFNS.angleWrap(-r.getAngleDeg() + 90); }
             opModeTelemetry.addChild(new TelemetryData("Target Angle", d.drivePID.target));
 
 

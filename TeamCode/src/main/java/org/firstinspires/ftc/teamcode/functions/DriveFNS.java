@@ -20,10 +20,10 @@ public abstract class DriveFNS {
 
 
       float[] speeds = {
-              (drive - strafe + turn),
               (drive + strafe - turn),
-              (drive + strafe + turn),
+              (drive - strafe + turn),
               (drive - strafe - turn),
+              (drive + strafe + turn),
       };
 
       //thank you internet, https://github.com/brandon-gong/ftc-mecanum/blob/master/MecanumDrive.java //this normalizes speeds[] to between 0-1
