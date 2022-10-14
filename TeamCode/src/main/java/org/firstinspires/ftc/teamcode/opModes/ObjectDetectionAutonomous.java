@@ -37,8 +37,14 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.teamcode.util.Hardware;
+import org.firstinspires.ftc.teamcode.functions.DriveFNS;
+import org.firstinspires.ftc.teamcode.functions.NavFunctions;
+import org.firstinspires.ftc.teamcode.util.DynamicData;
 import org.firstinspires.ftc.teamcode.util.ObjectDetection;
+import org.firstinspires.ftc.teamcode.util.PID.PIDFNS;
+import org.firstinspires.ftc.teamcode.util.PID.PIDSettings;
+import org.firstinspires.ftc.teamcode.util.StaticData;
+import org.firstinspires.ftc.teamcode.util.V2f;
 
 /**
  * This 2022-2023 OpMode illustrates the basics of using the TensorFlow Object Detection API to
@@ -50,7 +56,7 @@ import org.firstinspires.ftc.teamcode.util.ObjectDetection;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "Camera Detection Test", group = "Concept")
+@TeleOp(name = "Autonomous Object Detection", group = "Concept")
 
 /*
       all lables:
@@ -63,32 +69,49 @@ public class ObjectDetectionAutonomous extends LinearOpMode {
     @Override
     public void runOpMode(){
 
-        Hardware hardware = new Hardware(this.hardwareMap);
-        ObjectDetection detector = new ObjectDetection();
+        StaticData s = new StaticData(
+                this.hardwareMap,
+                new PIDSettings(0.018f, 0.0f, -0.5f),
+                new boolean[] { false, true, false, true } );
+
+        DynamicData d = new DynamicData();
+        ObjectDetection detector = new ObjectDetection(this.hardwareMap);
 
 
         telemetry.addData("PRG state", "Initialized");
         telemetry.update();
         this.waitForStart();
 
+
         while (opModeIsActive()) {
+            NavFunctions.updateHeading(s,d);
+            NavFunctions.updateDt(s, d);
+            float x = PIDFNS.updatePIDAngular(s.drivePIDSettings, d.drivePID, d.heading, (float) d.dt);
+
             List<Recognition> updatedRecognitions = detector.tfod.getUpdatedRecognitions();
             if(updatedRecognitions != null){
 
                 for (Recognition recognition : updatedRecognitions) {
-                   if(recognition.getLabel() == "1 Bolt"){
+                   if(recognition.getLabel().equals("1 Bolt")){
                        telemetry.addData("Object Detected", "Bolt");
+                       DriveFNS.setPower(s, new V2f(-1,0), x);
                    }
-                   if(recognition.getLabel() == "2 Bulb"){
+                   if(recognition.getLabel().equals("2 Bulb")){
                        telemetry.addData("Object Detected", "Bulb");
+                       DriveFNS.setPower(s, new V2f(0,-1), x);
                    }
-                   if(recognition.getLabel() == "3 Panel"){
+                   if(recognition.getLabel().equals("3 Panel")){
                        telemetry.addData("Object Detected", "Panel");
+                       DriveFNS.setPower(s, new V2f(1,0), x);
                    }
 
                 }
 
             }
+            else{
+                DriveFNS.setPower(s, new V2f(0,0), x);
+            }
+            telemetry.update();
 
 
         }

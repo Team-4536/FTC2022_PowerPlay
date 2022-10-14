@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.util;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -28,9 +28,9 @@ public class ObjectDetection {
     public TFObjectDetector tfod;
 
 
-    public ObjectDetection(){
-        initVuforia();
-        initTfod();
+    public ObjectDetection(HardwareMap map){
+        initVuforia(map);
+        initTfod(map);
 
 
         if (tfod != null) {
@@ -49,24 +49,25 @@ public class ObjectDetection {
 
 
 
-    private void initVuforia() {
+    private void initVuforia(HardwareMap map) {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
+
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         // parameters.cameraDirection = CameraDirection.BACK;
-        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        parameters.cameraName = map.get(WebcamName.class, "Webcam 1");
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
     }
 
 
-    private void initTfod() {
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+    private void initTfod(HardwareMap map) {
+        int tfodMonitorViewId = map.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", map.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.75f;
         tfodParameters.isModelTensorFlow2 = true;
