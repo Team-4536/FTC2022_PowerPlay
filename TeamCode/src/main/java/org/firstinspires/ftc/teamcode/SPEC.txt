@@ -1,0 +1,71 @@
+Hardware map naming:
+    all lowercase
+    underscores between words
+    config name should be the name of the bot, and the year
+    all hardware should start with the name of the subsystem, then function. Ex. drive_front_left
+
+    Subsystems for this year:
+        drive - front/back first
+        lift
+        grip
+        sensing - camera for cameras, imu for IMU
+
+
+
+
+
+
+
+OpMode naming:
+    OpModes should have the bot name first in the class name
+    OpModes should have TeleOp or Auto following the bot name
+    All opModes are linear
+    OpMode title in the driver station should be the same as the class name, with spaces
+        instead of caps
+
+
+
+
+
+General codebase things:
+    all program functionality should be in a functions class, or in an opmode.
+    all state that any set of functions needs should be added to staticData/dynamicData
+        (if the state needs to change at runtime, add to dynamic.)
+
+
+
+
+
+
+
+
+Codebase as of now (10.14.22):
+    StaticData:
+        drive motors, (handled by DriveFNS)
+        imu, (handled by nav, outs in dynamic)
+        drive settings, (updatePID with drivePID)
+        timer, (nav gets DT)
+
+    DynamicData:
+        drivePID (updated with driveSettings & updatePIDAngular)
+        current telemetryData
+        heading (flipped!), prevTime & DT (handled by NAV)
+
+
+
+    TelemetryData:
+        An easier way of doing telemetry. Current telemetryData is in dynamic, its cleared when sent.
+        Use TelemetryFunctions.send() to actually send added data to the drivers hub.
+        TelemetryData.addChild() will add a node under the parent, this will be indented when displayed.
+        Node children are not accessible after adding.
+
+
+    Functions you need in an opmode (pseudocode):
+        Nav.updateHeading, Nav.updateDt
+            these update what angle the robot is at, and how long its been since last iteration
+
+        PID.updateAngular
+            update the drive PID every frame, and store the output for angle correction
+
+        Telemetry.send
+            sends all current telemetry to drivers hub
