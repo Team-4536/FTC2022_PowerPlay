@@ -2,11 +2,11 @@ package org.firstinspires.ftc.teamcode.opModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.functions.DriveFNS;
-import org.firstinspires.ftc.teamcode.functions.TelemetryFNS;
+import org.firstinspires.ftc.teamcode.functions.DriveFunctions;
+import org.firstinspires.ftc.teamcode.functions.TelemetryFunctions;
 import org.firstinspires.ftc.teamcode.functions.NavFunctions;
 import org.firstinspires.ftc.teamcode.util.DynamicData;
-import org.firstinspires.ftc.teamcode.util.PID.PIDFNS;
+import org.firstinspires.ftc.teamcode.functions.PIDFunctions;
 import org.firstinspires.ftc.teamcode.util.PID.PIDSettings;
 import org.firstinspires.ftc.teamcode.util.StaticData;
 import org.firstinspires.ftc.teamcode.util.TelemetryData;
@@ -54,13 +54,13 @@ public class MechTeleOp extends LinearOpMode {
 
             //change target angle with input
             if(r.length() != 0){
-                d.drivePID.target = PIDFNS.angleWrap(-r.getAngleDeg() + 90); }
+                d.drivePID.target = PIDFunctions.angleWrap(+r.getAngleDeg() - 90); }
             opModeTelemetry.addChild(new TelemetryData("Target Angle", d.drivePID.target));
 
 
 
 
-            float PIDOut = PIDFNS.updatePIDAngular(
+            float PIDOut = PIDFunctions.updatePIDAngular(
                     s.drivePIDSettings,
                     d.drivePID,
                     d.heading,
@@ -74,13 +74,13 @@ public class MechTeleOp extends LinearOpMode {
 
             //rotate drive input to be relative to start angle, not current angle
             V2f in = new V2f(l.x, l.y);
-            in = in.rotated(d.heading);
+            in = in.rotated(-d.heading);
             //multiply x and y axis to compensate for speed differences when strafing vs driving
             in.x *= Constants.mechStrafeMod;
             in.y *= Constants.mechDriveMod;
             opModeTelemetry.addChild(new TelemetryData("Drive", in));
 
-            DriveFNS.setPower(
+            DriveFunctions.setPower(
                 s,
                 in,
                 PIDOut);
@@ -88,7 +88,7 @@ public class MechTeleOp extends LinearOpMode {
 
 
 
-            TelemetryFNS.sendTelemetry(this.telemetry, d.telemetryData);
+            TelemetryFunctions.sendTelemetry(this.telemetry, d.telemetryData);
         }
 
     }
