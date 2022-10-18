@@ -1,6 +1,9 @@
-package org.firstinspires.ftc.teamcode.util.PID;
+package org.firstinspires.ftc.teamcode.functions;
 
-public abstract class PIDFNS {
+import org.firstinspires.ftc.teamcode.util.PID.PIDData;
+import org.firstinspires.ftc.teamcode.util.PID.PIDSettings;
+
+public abstract class PIDFunctions {
 
 
     public static float updatePIDAngular(PIDSettings s, PIDData d, float pos, float dt){
@@ -8,7 +11,7 @@ public abstract class PIDFNS {
         //all code yoinked from ctrl alt ftc thanks lol
 
         // calculate the error in degrees
-        float error = PIDFNS.angleWrap(d.target - pos);
+        float error = PIDFunctions.angleWrap(d.target - pos);
         while(error > 180){ error -= 360; }
 
         // rate of change of the error

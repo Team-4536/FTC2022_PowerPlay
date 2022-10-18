@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.util.V2f;
 //DriveFS has all of the functions to control the bots drive motors.
 //drive motors should not be messed with outside of these functions.
 
-public abstract class DriveFNS {
+public abstract class DriveFunctions {
 
 
    // m&r need to be between 0 and 1

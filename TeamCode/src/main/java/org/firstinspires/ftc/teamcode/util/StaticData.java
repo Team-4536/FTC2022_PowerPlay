@@ -25,6 +25,8 @@ public class StaticData {
     //NAV_______________
     public @NonNull BNO055IMU imu;
     public @NonNull ElapsedTime timer;
+
+    public Step[] sequencerSteps;
     //_______________________
 
 
