@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.functions.DriveFunctions;
 import org.firstinspires.ftc.teamcode.functions.NavFunctions;
 import org.firstinspires.ftc.teamcode.functions.TelemetryFunctions;
-import org.firstinspires.ftc.teamcode.util.DynamicData;
+import org.firstinspires.ftc.teamcode.util.Data.DynamicData;
 import org.firstinspires.ftc.teamcode.functions.PIDFunctions;
 import org.firstinspires.ftc.teamcode.util.PID.PIDSettings;
-import org.firstinspires.ftc.teamcode.util.StaticData;
+import org.firstinspires.ftc.teamcode.util.Data.StaticData;
 import org.firstinspires.ftc.teamcode.util.TelemetryData;
 import org.firstinspires.ftc.teamcode.util.V2f;
 

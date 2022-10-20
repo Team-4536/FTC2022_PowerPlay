@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.util.Data;
 
 import org.firstinspires.ftc.teamcode.util.PID.PIDData;
+import org.firstinspires.ftc.teamcode.util.TelemetryData;
 
 public class DynamicData {
 
