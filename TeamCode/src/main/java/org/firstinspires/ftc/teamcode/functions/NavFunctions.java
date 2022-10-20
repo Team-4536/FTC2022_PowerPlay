@@ -4,8 +4,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.util.DynamicData;
-import org.firstinspires.ftc.teamcode.util.StaticData;
+import org.firstinspires.ftc.teamcode.util.Data.DynamicData;
+import org.firstinspires.ftc.teamcode.util.Data.StaticData;
 
 //class for figuring out the the bot is on the game board.
 //using TF, & acc

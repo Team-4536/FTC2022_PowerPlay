@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.util.Data;
 
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
-public class ObjectDetection {
+public class ObjectDetectionData {
     private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
 
 
@@ -28,7 +28,7 @@ public class ObjectDetection {
     public TFObjectDetector tfod;
 
 
-    public ObjectDetection(HardwareMap map){
+    public ObjectDetectionData(HardwareMap map){
         initVuforia(map);
         initTfod(map);
 

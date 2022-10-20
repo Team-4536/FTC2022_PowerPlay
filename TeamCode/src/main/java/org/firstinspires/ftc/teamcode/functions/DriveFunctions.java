@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.functions;
 
 import androidx.annotation.NonNull;
 
-import org.firstinspires.ftc.teamcode.util.StaticData;
+import org.firstinspires.ftc.teamcode.util.Data.StaticData;
 import org.firstinspires.ftc.teamcode.util.V2f;
 
 //DriveFS has all of the functions to control the bots drive motors.

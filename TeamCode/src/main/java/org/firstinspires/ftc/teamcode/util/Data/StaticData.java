@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.util.Data;
 
 import androidx.annotation.NonNull;
 
@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.util.PID.PIDSettings;
+import org.firstinspires.ftc.teamcode.util.Step;
 
 public class StaticData {
 

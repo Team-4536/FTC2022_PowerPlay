@@ -29,21 +29,19 @@
 
 package org.firstinspires.ftc.teamcode.opModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import java.util.List;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.teamcode.functions.DriveFNS;
+import org.firstinspires.ftc.teamcode.functions.DriveFunctions;
 import org.firstinspires.ftc.teamcode.functions.NavFunctions;
-import org.firstinspires.ftc.teamcode.util.DynamicData;
-import org.firstinspires.ftc.teamcode.util.ObjectDetection;
-import org.firstinspires.ftc.teamcode.util.PID.PIDFNS;
+import org.firstinspires.ftc.teamcode.functions.PIDFunctions;
+import org.firstinspires.ftc.teamcode.util.Data.DynamicData;
+import org.firstinspires.ftc.teamcode.util.Data.ObjectDetectionData;
 import org.firstinspires.ftc.teamcode.util.PID.PIDSettings;
-import org.firstinspires.ftc.teamcode.util.StaticData;
+import org.firstinspires.ftc.teamcode.util.Data.StaticData;
 import org.firstinspires.ftc.teamcode.util.V2f;
 
 /**
@@ -56,7 +54,7 @@ import org.firstinspires.ftc.teamcode.util.V2f;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "Autonomous Object Detection", group = "Concept")
+@Autonomous(name = "Autonomous Object Detection", group = "Concept")
 
 /*
       all lables:
@@ -75,7 +73,7 @@ public class ObjectDetectionAutonomous extends LinearOpMode {
                 new boolean[] { false, true, false, true } );
 
         DynamicData d = new DynamicData();
-        ObjectDetection detector = new ObjectDetection(this.hardwareMap);
+        ObjectDetectionData detector = new ObjectDetectionData(this.hardwareMap);
 
 
         telemetry.addData("PRG state", "Initialized");
@@ -86,7 +84,7 @@ public class ObjectDetectionAutonomous extends LinearOpMode {
         while (opModeIsActive()) {
             NavFunctions.updateHeading(s,d);
             NavFunctions.updateDt(s, d);
-            float x = PIDFNS.updatePIDAngular(s.drivePIDSettings, d.drivePID, d.heading, (float) d.dt);
+            float x = PIDFunctions.updatePIDAngular(s.drivePIDSettings, d.drivePID, d.heading, (float) d.dt);
 
             List<Recognition> updatedRecognitions = detector.tfod.getUpdatedRecognitions();
             if(updatedRecognitions != null){
@@ -94,22 +92,22 @@ public class ObjectDetectionAutonomous extends LinearOpMode {
                 for (Recognition recognition : updatedRecognitions) {
                    if(recognition.getLabel().equals("1 Bolt")){
                        telemetry.addData("Object Detected", "Bolt");
-                       DriveFNS.setPower(s, new V2f(-1,0), x);
+                       DriveFunctions.setPower(s, new V2f(-1,0), x);
                    }
                    if(recognition.getLabel().equals("2 Bulb")){
                        telemetry.addData("Object Detected", "Bulb");
-                       DriveFNS.setPower(s, new V2f(0,-1), x);
+                       DriveFunctions.setPower(s, new V2f(0,-1), x);
                    }
                    if(recognition.getLabel().equals("3 Panel")){
                        telemetry.addData("Object Detected", "Panel");
-                       DriveFNS.setPower(s, new V2f(1,0), x);
+                       DriveFunctions.setPower(s, new V2f(1,0), x);
                    }
 
                 }
 
             }
             else{
-                DriveFNS.setPower(s, new V2f(0,0), x);
+                DriveFunctions.setPower(s, new V2f(0,0), x);
             }
             telemetry.update();
 
