@@ -29,9 +29,7 @@ OpMode naming:
 
 General codebase things:
     all program functionality should be in a functions class, or in an opmode.
-    all state that any set of functions needs should be added to staticData/dynamicData
-        (if the state needs to change at runtime, add to dynamic.)
-
+    all program state should be grouped into Data classes.
 
 
 
@@ -40,18 +38,9 @@ General codebase things:
 
 
 Codebase as of now (10.14.22):
-    StaticData:
-        drive motors, (handled by DriveFNS)
-        imu, (handled by nav, outs in dynamic)
-        drive settings, (updatePID with drivePID)
-        timer, (nav gets DT)
-
-    DynamicData:
-        drivePID (updated with driveSettings & updatePIDAngular)
-        current telemetryData
-        heading (flipped!), prevTime & DT (handled by NAV)
-
-
+    PIDData:
+        contains settings for a PID + current data.
+        Settings are readonly after construction.
 
     TelemetryData:
         An easier way of doing telemetry. Current telemetryData is in dynamic, its cleared when sent.
@@ -59,13 +48,20 @@ Codebase as of now (10.14.22):
         TelemetryData.addChild() will add a node under the parent, this will be indented when displayed.
         Node children are not accessible after adding.
 
+    NavData:
+        Contains Heading, IMU ref, Timer, & DT values.
 
-    Functions you need in an opmode (pseudocode):
-        Nav.updateHeading, Nav.updateDt
-            these update what angle the robot is at, and how long its been since last iteration
+    DriveData:
+        Motor refs, constructed with a flip map.
 
-        PID.updateAngular
-            update the drive PID every frame, and store the output for angle correction
+    ObjectDetectionData:
+        TF and Vuforia refs. Initializes on construction.
 
-        Telemetry.send
-            sends all current telemetry to drivers hub
+
+Functions you need in an opMode (pseudocode):
+    Nav.updateHeading, Nav.updateDt
+        these update what angle the robot is at, and how long its been since last iteration
+
+    Telemetry.send
+        sends all current telemetry to drivers hub
+

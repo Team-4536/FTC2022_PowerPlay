@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.functions;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.util.TelemetryData;
+import org.firstinspires.ftc.teamcode.util.Data.TelemetryData;
 
 //Telemetry functions for sending back bot info.
 //all of these only return a string (FORMATTING), that can be sent telemetry after

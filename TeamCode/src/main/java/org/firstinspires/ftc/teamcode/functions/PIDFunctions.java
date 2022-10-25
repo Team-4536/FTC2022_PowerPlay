@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.functions;
 
-import org.firstinspires.ftc.teamcode.util.PID.PIDData;
-import org.firstinspires.ftc.teamcode.util.PID.PIDSettings;
+import org.firstinspires.ftc.teamcode.util.Data.PIDData;
 
 public abstract class PIDFunctions {
 
 
-    public static float updatePIDAngular(PIDSettings s, PIDData d, float pos, float dt){
+    public static float updatePIDAngular(PIDData d, float pos, float dt){
 
         //all code yoinked from ctrl alt ftc thanks lol
 
@@ -20,7 +19,7 @@ public abstract class PIDFunctions {
         // sum of all error over time
         d.iSum += error * dt;
 
-        float out = (s.Kp * error) + (s.Ki * d.iSum) + (s.Kd * derivative);
+        float out = (d.Kp * error) + (d.Ki * d.iSum) + (d.Kd * derivative);
 
         d.prevErr = error;
 

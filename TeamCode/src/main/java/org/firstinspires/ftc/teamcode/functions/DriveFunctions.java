@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.functions;
 
 import androidx.annotation.NonNull;
 
-import org.firstinspires.ftc.teamcode.util.Data.StaticData;
+import org.firstinspires.ftc.teamcode.util.Data.DriveData;
 import org.firstinspires.ftc.teamcode.util.V2f;
 
 //DriveFS has all of the functions to control the bots drive motors.
@@ -14,7 +14,7 @@ public abstract class DriveFunctions {
    // m&r need to be between 0 and 1
    //sets the power of drive motors so that the bot will move by m and turn by r
    //NTS: axis from IMU is flipped, so its flipped here too. + turn = turn left
-   public static void setPower(@NonNull StaticData h, @NonNull V2f m, float turn) {
+   public static void setPower(@NonNull DriveData d, @NonNull V2f m, float turn) {
       float drive = m.y;
       float strafe = m.x;
 
@@ -40,9 +40,9 @@ public abstract class DriveFunctions {
             speeds[i] /= max; } }
 
       //set motor power
-      h.FLDrive.setPower(speeds[0]);
-      h.FRDrive.setPower(speeds[1]);
-      h.BLDrive.setPower(speeds[2]);
-      h.BRDrive.setPower(speeds[3]);
+      d.FLDrive.setPower(speeds[0]);
+      d.FRDrive.setPower(speeds[1]);
+      d.BLDrive.setPower(speeds[2]);
+      d.BRDrive.setPower(speeds[3]);
    }
 }
