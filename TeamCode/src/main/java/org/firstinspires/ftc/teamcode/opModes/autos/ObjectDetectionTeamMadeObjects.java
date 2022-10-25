@@ -20,8 +20,8 @@ import org.firstinspires.ftc.teamcode.util.V2f;
 import java.util.List;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="MechAuto CV Parking Standard", group="Autos")
-public class MechAutoStandardParking extends LinearOpMode {
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="MechAuto CV Parking Custom", group="Autos")
+public class ObjectDetectionTeamMadeObjects extends LinearOpMode {
 
 
 
@@ -58,7 +58,7 @@ public class MechAutoStandardParking extends LinearOpMode {
                 }
         };
 
-        ObjectDetectionData detector = new ObjectDetectionData(this.hardwareMap, Constants.STANDARD_SLEEVE_MODEL);
+        ObjectDetectionData detector = new ObjectDetectionData(this.hardwareMap, Constants.CUSTUM_SLEEVE_MODEL);
         int zone = 0;
 
 
@@ -88,15 +88,15 @@ public class MechAutoStandardParking extends LinearOpMode {
 
                     for (Recognition recognition : updatedRecognitions) {
                         if (recognition.getLabel().equals(Constants.STANDARD_SLEEVE_MODEL.tags[0])) {
-                            telemetry.addChild("Object Detected", "Bolt");
+                            telemetry.addChild("Object Detected", "Red Dots");
                             zone = 1;
                         }
                         if (recognition.getLabel().equals(Constants.STANDARD_SLEEVE_MODEL.tags[1])) {
-                            telemetry.addChild("Object Detected", "Bulb");
+                            telemetry.addChild("Object Detected", "Blue Lines");
                             zone = 2;
                         }
                         if (recognition.getLabel().equals(Constants.STANDARD_SLEEVE_MODEL.tags[2])) {
-                            telemetry.addChild("Object Detected", "Panel");
+                            telemetry.addChild("Object Detected", "Green Lines");
                             zone = 3;
                         }
 

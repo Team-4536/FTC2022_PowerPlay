@@ -7,7 +7,7 @@ public abstract class Constants {
     public static final float mechDriveMod = 0.6f;
 
 
-    public static final String telemetryIndent = "        ";
+    public static final String telemetryIndent = "        \t";
 
 
 
@@ -21,9 +21,17 @@ public abstract class Constants {
     public static final Model STANDARD_SLEEVE_MODEL = new Model(
             "PowerPlay.tflite",
             new String[] {
-                    "1 Bolt",
+                    "1 Bulb",
                     "2 Bulb",
                     "3 Panel"
+            }
+    );
+    public static final Model CUSTUM_SLEEVE_MODEL = new Model(
+            "C:\\Users\\minut\\Downloads\\model_20221025_155609.tflite",
+            new String[] {
+                    "1 Red Dots",
+                    "2 Blue Lines",
+                    "3 Green Lines"
             }
     );
 }
