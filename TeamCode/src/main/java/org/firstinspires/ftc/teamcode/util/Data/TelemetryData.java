@@ -1,5 +1,8 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.util.Data;
 import androidx.annotation.NonNull;
+
+import org.firstinspires.ftc.teamcode.util.Constants;
+import org.firstinspires.ftc.teamcode.util.V2f;
 
 import java.util.ArrayList;
 
@@ -72,7 +75,7 @@ public class TelemetryData{
             r = r + Constants.telemetryIndent; }
 
 
-        r += this.title + ": " + this.info + "\n";
+        r += this.title + ((!this.info.equals(""))? ": " : "") + this.info + "\n";
         for (TelemetryData t : this.children) {
             r = r + t.getString();
         }
