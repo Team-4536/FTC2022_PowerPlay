@@ -26,12 +26,12 @@ public abstract class Constants {
                     "3 Panel"
             }
     );
-    public static final Model CUSTUM_SLEEVE_MODEL = new Model(
-            "C:\\Users\\minut\\Downloads\\model_20221025_155609.tflite",
+    public static final Model CUSTOM_SLEEVE_MODEL = new Model(
+            "custumModel.tflite",
             new String[] {
-                    "1 Red Dots",
-                    "2 Blue Lines",
-                    "3 Green Lines"
+                    "BlueLines",
+                    "GreenLines",
+                    "redDots"
             }
     );
 }

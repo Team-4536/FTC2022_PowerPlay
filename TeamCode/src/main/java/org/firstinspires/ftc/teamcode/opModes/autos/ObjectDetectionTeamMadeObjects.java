@@ -58,7 +58,7 @@ public class ObjectDetectionTeamMadeObjects extends LinearOpMode {
                 }
         };
 
-        ObjectDetectionData detector = new ObjectDetectionData(this.hardwareMap, Constants.CUSTUM_SLEEVE_MODEL);
+        ObjectDetectionData detector = new ObjectDetectionData(this.hardwareMap, Constants.CUSTOM_SLEEVE_MODEL);
         int zone = 0;
 
 
@@ -87,15 +87,15 @@ public class ObjectDetectionTeamMadeObjects extends LinearOpMode {
                 if(updatedRecognitions != null) {
 
                     for (Recognition recognition : updatedRecognitions) {
-                        if (recognition.getLabel().equals(Constants.STANDARD_SLEEVE_MODEL.tags[0])) {
+                        if (recognition.getLabel().equals(Constants.CUSTOM_SLEEVE_MODEL.tags[0])) {
                             telemetry.addChild("Object Detected", "Red Dots");
                             zone = 1;
                         }
-                        if (recognition.getLabel().equals(Constants.STANDARD_SLEEVE_MODEL.tags[1])) {
+                        if (recognition.getLabel().equals(Constants.CUSTOM_SLEEVE_MODEL.tags[1])) {
                             telemetry.addChild("Object Detected", "Blue Lines");
                             zone = 2;
                         }
-                        if (recognition.getLabel().equals(Constants.STANDARD_SLEEVE_MODEL.tags[2])) {
+                        if (recognition.getLabel().equals(Constants.CUSTOM_SLEEVE_MODEL.tags[2])) {
                             telemetry.addChild("Object Detected", "Green Lines");
                             zone = 3;
                         }

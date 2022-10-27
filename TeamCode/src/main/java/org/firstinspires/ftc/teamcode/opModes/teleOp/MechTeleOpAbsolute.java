@@ -34,8 +34,8 @@ public class MechTeleOpAbsolute extends LinearOpMode {
 
 
         //TEMP
-        @NonNull Servo gripServo;
-        gripServo = this.hardwareMap.get(Servo.class, "grip_servo");
+        //@NonNull Servo gripServo;
+        //gripServo = this.hardwareMap.get(Servo.class, "grip_servo");
 
 
 
@@ -103,12 +103,12 @@ public class MechTeleOpAbsolute extends LinearOpMode {
 
 
 
-            gripServo.setPosition(t);
+            /*gripServo.setPosition(t);
             TelemetryData st = new TelemetryData("Servo");
             telemetry.addChild(st);
             st.addChild("Servo Target", t);
             st.addChild("Servo Pos", gripServo.getPosition());
-
+            */
 
 
             TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
