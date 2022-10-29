@@ -2,12 +2,15 @@
 TODO: Touch grass
 
 
-TODO: tensorflow interface
 TODO: BNO0 calibration? // in examples!
 
 
 
-TODO: nav image detection and positioning
 
+TODO: fix custom model/sleeve                   - Big Mikey
+TODO: nav image detection and positioning
+TODO: add lift and grip motors and functions
+TODO: auto scoring
+TODO: research encoders
 
 

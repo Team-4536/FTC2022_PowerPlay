@@ -47,8 +47,6 @@ public class XTeleOpAbsolute extends LinearOpMode{
                         -this.gamepad1.right_stick_y);
 
 
-                float liftSpeed = this.gamepad1.right_trigger - this.gamepad1.left_trigger;
-                float servoPosition = this.gamepad1.right_bumper?1:0 - (this.gamepad1.left_bumper?1:0);
 
                 NavFunctions.updateDt(nav);
                 NavFunctions.updateHeading(nav);
@@ -79,6 +77,11 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
                 //rotate drive input to be relative to start angle, not current angle
                 V2f in = new V2f(l.x, l.y);
+                float mod = Constants.defaultXDriveSpeed + ((1-Constants.defaultXDriveSpeed)*this.gamepad1.right_trigger);
+                telemetry.addChild("Percent", mod);
+                in = new V2f(
+                        in.x * mod,
+                        in.y * mod);
                 in = in.rotated(-nav.heading);
                 opModeTelemetry.addChild(new TelemetryData("Drive", in));
 
@@ -89,24 +92,25 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
 
 
-                arm.gripServo.setPosition(servoPosition);
-
-                int pos = arm.liftMotor.getCurrentPosition();
-                telemetry.addChild("Lift pos", pos);
-
-                //if(!(liftSpeed < 0 && pos < 10)){
-                //    arm.liftMotor.setPower(liftSpeed);
-                //}
-                //else if(liftSpeed > 0 && pos < Constants.ticksPerLiftRevolution) {
-                //    arm.liftMotor.setPower(liftSpeed);
-                //}
-                arm.liftMotor.setPower(liftSpeed);
 
 
-                TelemetryData servoTarget = new TelemetryData("Servo");
-                telemetry.addChild(servoTarget);
-                servoTarget.addChild("Servo Target", liftSpeed);
-                servoTarget.addChild("Servo Pos", arm.gripServo.getPosition());
+
+
+                //float liftSpeed = this.gamepad1.right_trigger - this.gamepad1.left_trigger;
+                //float servoPosition = this.gamepad1.right_bumper?1:0 - (this.gamepad1.left_bumper?1:0);
+
+                //arm.gripServo.setPosition(servoPosition);
+
+                //int pos = arm.liftMotor.getCurrentPosition();
+                //telemetry.addChild("Lift pos", pos);
+
+                //arm.liftMotor.setPower(liftSpeed);
+
+
+                //TelemetryData servoTarget = new TelemetryData("Servo");
+                //telemetry.addChild(servoTarget);
+                //servoTarget.addChild("Servo Target", liftSpeed);
+                //servoTarget.addChild("Servo Pos", arm.gripServo.getPosition());
 
 
 
