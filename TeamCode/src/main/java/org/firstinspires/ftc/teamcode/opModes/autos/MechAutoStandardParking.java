@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.util.V2f;
 import java.util.List;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="MechAuto CV Parking", group="Autos")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="MechAuto CV Parking Standard", group="Autos")
 public class MechAutoStandardParking extends LinearOpMode {
 
 

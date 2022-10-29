@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.functions.DriveFunctions;
 import org.firstinspires.ftc.teamcode.functions.TelemetryFunctions;
 import org.firstinspires.ftc.teamcode.functions.NavFunctions;
 import org.firstinspires.ftc.teamcode.functions.PIDFunctions;
+import org.firstinspires.ftc.teamcode.util.Data.ArmData;
 import org.firstinspires.ftc.teamcode.util.Data.DriveData;
 import org.firstinspires.ftc.teamcode.util.Data.NavData;
 import org.firstinspires.ftc.teamcode.util.Data.PIDData;
@@ -33,9 +34,6 @@ public class MechTeleOpAbsolute extends LinearOpMode {
         PIDData drivePID = new PIDData(0.018f, 0.0f, -0.2f);
 
 
-        //TEMP
-        @NonNull Servo gripServo;
-        gripServo = this.hardwareMap.get(Servo.class, "grip_servo");
 
 
 
@@ -53,7 +51,6 @@ public class MechTeleOpAbsolute extends LinearOpMode {
                     this.gamepad1.right_stick_x,
                     -this.gamepad1.right_stick_y);
 
-            float t = this.gamepad1.right_trigger - this.gamepad1.left_trigger;
 
 
 
@@ -103,11 +100,7 @@ public class MechTeleOpAbsolute extends LinearOpMode {
 
 
 
-            gripServo.setPosition(t);
-            TelemetryData st = new TelemetryData("Servo");
-            telemetry.addChild(st);
-            st.addChild("Servo Target", t);
-            st.addChild("Servo Pos", gripServo.getPosition());
+
 
 
 
