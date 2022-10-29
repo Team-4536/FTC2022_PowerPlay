@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.functions.DriveFunctions;
 import org.firstinspires.ftc.teamcode.functions.NavFunctions;
 import org.firstinspires.ftc.teamcode.functions.TelemetryFunctions;
+import org.firstinspires.ftc.teamcode.util.Constants;
+import org.firstinspires.ftc.teamcode.util.Data.ArmData;
 import org.firstinspires.ftc.teamcode.util.Data.DriveData;
 import org.firstinspires.ftc.teamcode.functions.PIDFunctions;
 import org.firstinspires.ftc.teamcode.util.Data.NavData;
@@ -29,7 +31,7 @@ public class XTeleOpAbsolute extends LinearOpMode{
                     this.hardwareMap);
             PIDData drivePID = new PIDData(0.018f, 0.0f, -0.2f);
 
-
+            ArmData arm = new ArmData(this.hardwareMap);
 
 
             waitForStart();
@@ -45,7 +47,8 @@ public class XTeleOpAbsolute extends LinearOpMode{
                         -this.gamepad1.right_stick_y);
 
 
-
+                float liftSpeed = this.gamepad1.right_trigger - this.gamepad1.left_trigger;
+                float servoPosition = this.gamepad1.right_bumper?1:0 - (this.gamepad1.left_bumper?1:0);
 
                 NavFunctions.updateDt(nav);
                 NavFunctions.updateHeading(nav);
@@ -84,6 +87,26 @@ public class XTeleOpAbsolute extends LinearOpMode{
                         in,
                         PIDOut);
 
+
+
+                arm.gripServo.setPosition(servoPosition);
+
+                int pos = arm.liftMotor.getCurrentPosition();
+                telemetry.addChild("Lift pos", pos);
+
+                //if(!(liftSpeed < 0 && pos < 10)){
+                //    arm.liftMotor.setPower(liftSpeed);
+                //}
+                //else if(liftSpeed > 0 && pos < Constants.ticksPerLiftRevolution) {
+                //    arm.liftMotor.setPower(liftSpeed);
+                //}
+                arm.liftMotor.setPower(liftSpeed);
+
+
+                TelemetryData servoTarget = new TelemetryData("Servo");
+                telemetry.addChild(servoTarget);
+                servoTarget.addChild("Servo Target", liftSpeed);
+                servoTarget.addChild("Servo Pos", arm.gripServo.getPosition());
 
 
 
