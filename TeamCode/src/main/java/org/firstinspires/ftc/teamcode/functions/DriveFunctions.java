@@ -26,7 +26,8 @@ public abstract class DriveFunctions {
               (drive + strafe + turn),
       };
 
-      //thank you internet, https://github.com/brandon-gong/ftc-mecanum/blob/master/MecanumDrive.java //this normalizes speeds[] to between 0-1
+      //thank you internet, https://github.com/brandon-gong/ftc-mecanum/blob/master/MecanumDrive.java
+      // this normalizes speeds[] to between 0-1
       float max = Math.abs(speeds[0]);
       for (int i = 1; i < speeds.length; i++) {
          if (max < Math.abs(speeds[i])) {

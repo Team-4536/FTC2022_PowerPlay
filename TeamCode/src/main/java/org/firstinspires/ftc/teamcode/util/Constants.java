@@ -7,12 +7,12 @@ public abstract class Constants {
     public static final float mechDriveMod = 0.6f;
 
 
-    public static final String telemetryIndent = "        \t";
+    public static final String telemetryIndent = "        ";
 
 
+    public static final float minTurnLength = 0.5f;
 
-
-    public static final int ticksPerLiftRevolution = 1440;
+    //public static final int ticksPerLiftRevolution = 1440;
     public static final float defaultXDriveSpeed = 0.25f;
 
     public static final String VUFORIA_KEY =
@@ -21,19 +21,43 @@ public abstract class Constants {
 
     public static final Model STANDARD_SLEEVE_MODEL = new Model(
             "PowerPlay.tflite",
-            new String[] {
-                    "1 Bulb",
-                    "2 Bulb",
-                    "3 Panel"
+            new String[]{
+                    "1",
+                    "2",
+                    "3"
             }
     );
     public static final Model CUSTOM_SLEEVE_MODEL = new Model(
             "custumModel.tflite",
-            new String[] {
+            new String[]{
                     "BlueLines",
                     "GreenLines",
                     "redDots"
             }
     );
+
+
+    static final float zonesPwr = 0.25f;
+    static final float hTime = 3.4f;
+    static final float vTime = 4.0f;
+
+    public static Step[][] parkingSeqences = new Step[][]{
+
+            new Step[] { },
+
+            new Step[]{
+                    new Step(new float[]{-zonesPwr, 0}, hTime),
+                    new Step(new float[]{0, zonesPwr}, vTime)
+            },
+
+            new Step[]{
+                    new Step(new float[]{0, zonesPwr}, vTime),
+            },
+
+            new Step[]{
+                    new Step(new float[]{zonesPwr, 0}, hTime),
+                    new Step(new float[]{0, zonesPwr}, vTime)
+            }
+    };
 }
 

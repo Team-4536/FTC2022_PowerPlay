@@ -7,10 +7,12 @@ TODO: BNO0 calibration? // in examples!
 
 
 
-TODO: fix custom model/sleeve                   - Big Mikey
-TODO: nav image detection and positioning
-TODO: add lift and grip motors and functions
 TODO: auto scoring
-TODO: research encoders
+        TODO: limits for lifter
+    TODO: QR codes
 
 
+
+
+TODO: better gripper
+TODO: get sweatshirt
