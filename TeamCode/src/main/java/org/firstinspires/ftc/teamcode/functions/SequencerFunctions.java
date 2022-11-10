@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.functions;
 
 import org.firstinspires.ftc.teamcode.util.Step;
 
-public class SequencerFunctions {
+public abstract class SequencerFunctions {
 
 
     public static Step getStep(Step[] steps, float time){

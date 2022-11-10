@@ -20,8 +20,8 @@ import org.firstinspires.ftc.teamcode.util.V2f;
 import java.util.List;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="MechAuto CV Parking Standard", group="Autos")
-public class MechAutoStandardParking extends LinearOpMode {
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="XAuto CVP Standard", group="Autos")
+public class XAutoStandardParking extends LinearOpMode {
 
 
 
@@ -38,26 +38,6 @@ public class MechAutoStandardParking extends LinearOpMode {
                 this.hardwareMap);
         PIDData drivePID = new PIDData(0.018f, 0.0f, -0.2f);
 
-
-        Step[][] autos = new Step[][]{
-
-                new Step[] { },
-
-                new Step[]{
-                        new Step(new float[]{-0.4f, 0f}, 2),
-                        new Step(new float[]{0, 0.4f}, 2)
-                },
-
-                new Step[]{
-                        new Step(new float[]{0, 0.4f}, 2),
-                },
-
-                new Step[]{
-                        new Step(new float[]{0.4f, 0f}, 2),
-                        new Step(new float[]{0, 0.4f}, 2)
-                }
-        };
-
         ObjectDetectionData detector = new ObjectDetectionData(this.hardwareMap, Constants.STANDARD_SLEEVE_MODEL);
         int zone = 0;
 
@@ -70,7 +50,6 @@ public class MechAutoStandardParking extends LinearOpMode {
         nav.timer.reset();
         while (opModeIsActive()) {
 
-
             NavFunctions.updateDt(nav);
             NavFunctions.updateHeading(nav);
 
@@ -79,8 +58,6 @@ public class MechAutoStandardParking extends LinearOpMode {
                     nav.heading,
                     (float)nav.dt);
 
-
-
             if(zone == 0){
 
                 List<Recognition> updatedRecognitions = detector.tfod.getUpdatedRecognitions();
@@ -88,21 +65,19 @@ public class MechAutoStandardParking extends LinearOpMode {
 
                     for (Recognition recognition : updatedRecognitions) {
                         if (recognition.getLabel().equals(Constants.STANDARD_SLEEVE_MODEL.tags[0])) {
-                            telemetry.addChild("Object Detected", "Bolt");
                             zone = 1;
                         }
-                        if (recognition.getLabel().equals(Constants.STANDARD_SLEEVE_MODEL.tags[1])) {
-                            telemetry.addChild("Object Detected", "Bulb");
+                        else if (recognition.getLabel().equals(Constants.STANDARD_SLEEVE_MODEL.tags[1])) {
                             zone = 2;
                         }
-                        if (recognition.getLabel().equals(Constants.STANDARD_SLEEVE_MODEL.tags[2])) {
-                            telemetry.addChild("Object Detected", "Panel");
+                        else if (recognition.getLabel().equals(Constants.STANDARD_SLEEVE_MODEL.tags[2])) {
                             zone = 3;
                         }
 
                     }
                 }
 
+                //if the zone is found this iteration, reset timer to work w/ sequencer
                 if(zone != 0){
                     nav.timer.reset();
                 }
@@ -112,7 +87,9 @@ public class MechAutoStandardParking extends LinearOpMode {
                 //if a zone is detected, set motor pwr with current step of that zones
                 //sequence
 
-                Step c = SequencerFunctions.getStep(autos[zone], (float)nav.timer.seconds());
+                Step c = SequencerFunctions.getStep(
+                        Constants.PARKING_SEQUENCES[zone],
+                        (float)nav.timer.seconds());
 
 
                 if(c.data.length == 0) {

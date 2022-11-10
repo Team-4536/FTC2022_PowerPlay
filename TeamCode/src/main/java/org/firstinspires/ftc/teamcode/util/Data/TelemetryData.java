@@ -72,7 +72,7 @@ public class TelemetryData{
         String r = "";
         //r = r + level + " ";
         for(int i = 0; i < level; i++){
-            r = r + Constants.telemetryIndent; }
+            r = r + Constants.TELEMETRY_INDENT; }
 
 
         r += this.title + ((!this.info.equals(""))? ": " : "") + this.info + "\n";

@@ -62,7 +62,7 @@ public class MechTeleOpAbsolute extends LinearOpMode {
 
 
             //change target angle with input
-            if(r.length() != 0){
+            if(r.length() >= 0.1f){
                 drivePID.target = PIDFunctions.angleWrap(+r.getAngleDeg() - 90); }
             telemetry.addChild(new TelemetryData("Target Angle", drivePID.target));
 
