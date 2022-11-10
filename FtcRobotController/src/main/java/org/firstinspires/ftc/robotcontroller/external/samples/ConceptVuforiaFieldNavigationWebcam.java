@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -78,18 +77,6 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 @TeleOp(name="Vuforia Field Nav Webcam", group ="Concept")
 public class ConceptVuforiaFieldNavigationWebcam extends LinearOpMode {
 
-    /*
-     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
-     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
-     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
-     * web site at https://developer.vuforia.com/license-manager.
-     *
-     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
-     * random data. As an example, here is a example of a fragment of a valid key:
-     *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
-     * Once you've obtained a license key, copy the string from the Vuforia web site
-     * and paste it in to your code on the next line, between the double quotes.
-     */
     private static final String VUFORIA_KEY =
             "ARtx29j/////AAABmc8Mmozqr0GsgPsH/NOLUkBPcj0u8eyHkeiAyftu6QAtlUKWRkZ5UPmI6mCAXfVgmJHq7dPpxL1kd5rCK4YO8ABWIbqITG6W6Kp8LqKWJnRWOVIBoOxtZsSkfvOu39s2NKVKbmNshfLUTkNS8Xs6NLOJS2mAHITqOPgR+68DhqEFQIvT1HRBplwsEeuWFVeiizCgmp3sBHZMWdNiCN0KS1AZLbF/+352OGpIkhFGPuMYSb7VdjLVUPRc3Pl7qoOISjVpIweyRMIrc/jkj3bEBULFbKjPyBa+sAwXnxiBxoFDVB7Fo2S5NsU6pW1w67wqYyHM8R1/JLEQJqWTFf+hrnLnPN+aew4/+C3q1XP14fBg";
 
@@ -103,46 +90,38 @@ public class ConceptVuforiaFieldNavigationWebcam extends LinearOpMode {
 
     // Class Members
     private OpenGLMatrix lastLocation   = null;
-    private VuforiaLocalizer vuforia    = null;
-    private VuforiaTrackables targets   = null ;
-    private WebcamName webcamName       = null;
 
     private boolean targetVisible       = false;
 
     @Override public void runOpMode() {
-        // Connect to the camera we are to use.  This name must match what is set up in Robot Configuration
-        webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         * We can pass Vuforia the handle to a camera preview resource (on the RC screen);
-         * If no camera-preview is desired, use the parameter-less constructor instead (commented out below).
-         * Note: A preview window is required if you want to view the camera stream on the Driver Station Phone.
-         */
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        // VUFORIA INIT
+        // Same code as object detector, besides camMonitor, plz look into more
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources()
+                .getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");;
+        // parameters.useExtendedTracking = false;
+        VuforiaLocalizer vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
-        // We also indicate which camera we wish to use.
-        parameters.cameraName = webcamName;
+        //============================================================================
 
-        // Turn off Extended tracking.  Set this true if you want Vuforia to track beyond the target.
-        parameters.useExtendedTracking = false;
 
-        //  Instantiate the Vuforia engine
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
+
+
+
+
+
+        //SETUP TARGETS
         // Load the data sets for the trackable objects. These particular data
         // sets are stored in the 'assets' part of our application.
-        targets = this.vuforia.loadTrackablesFromAsset("PowerPlay");
+        VuforiaTrackables targets = vuforia.loadTrackablesFromAsset("PowerPlay");
+        List<VuforiaTrackable> allTrackables = new ArrayList<>(targets);
 
-        // For convenience, gather together all the trackable objects in one easily-iterable collection */
-        List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
-        allTrackables.addAll(targets);
-
-        /**
+        /*
          * In order for localization to work, we need to tell the system where each target is on the field, and
          * where the phone resides on the robot.  These specifications are in the form of <em>transformation matrices.</em>
          * Transformation matrices are a central, important concept in the math here involved in localization.
@@ -161,10 +140,26 @@ public class ConceptVuforiaFieldNavigationWebcam extends LinearOpMode {
          */
 
         // Name and locate each trackable object
-        identifyTarget(0, "Red Audience Wall",   -halfField,  -oneAndHalfTile, mmTargetHeight, 90, 0,  90);
-        identifyTarget(1, "Red Rear Wall",        halfField,  -oneAndHalfTile, mmTargetHeight, 90, 0, -90);
-        identifyTarget(2, "Blue Audience Wall",  -halfField,   oneAndHalfTile, mmTargetHeight, 90, 0,  90);
-        identifyTarget(3, "Blue Rear Wall",       halfField,   oneAndHalfTile, mmTargetHeight, 90, 0, -90);
+        identifyTarget(targets, 0, "Red Left",
+                -halfField,  -oneAndHalfTile, mmTargetHeight, 90, 0,  90);
+
+        identifyTarget(targets, 1, "Red Right",
+                halfField,  -oneAndHalfTile, mmTargetHeight, 90, 0, -90);
+
+        identifyTarget(targets, 2, "Blue Right",
+                -halfField,   oneAndHalfTile, mmTargetHeight, 90, 0,  90);
+
+        identifyTarget(targets, 3, "Blue Left",
+                halfField,   oneAndHalfTile, mmTargetHeight, 90, 0, -90);
+        //======================================================================================
+
+
+
+
+
+
+
+
 
         /*
          * Create a transformation matrix describing where the camera is on the robot.
@@ -196,27 +191,16 @@ public class ConceptVuforiaFieldNavigationWebcam extends LinearOpMode {
 
         /**  Let all the trackable listeners know where the camera is.  */
         for (VuforiaTrackable trackable : allTrackables) {
-            ((VuforiaTrackableDefaultListener) trackable.getListener()).setCameraLocationOnRobot(parameters.cameraName, cameraLocationOnRobot);
+            ((VuforiaTrackableDefaultListener) trackable.getListener()).
+                    setCameraLocationOnRobot(parameters.cameraName, cameraLocationOnRobot);
         }
 
-        /*
-         * WARNING:
-         * In this sample, we do not wait for PLAY to be pressed.  Target Tracking is started immediately when INIT is pressed.
-         * This sequence is used to enable the new remote DS Camera Preview feature to be used with this sample.
-         * CONSEQUENTLY do not put any driving commands in this loop.
-         * To restore the normal opmode structure, just un-comment the following line:
-         */
-
-        // waitForStart();
-
-        /* Note: To use the remote camera preview:
-         * AFTER you hit Init on the Driver Station, use the "options menu" to select "Camera Stream"
-         * Tap the preview window to receive a fresh image.
-         * It is not permitted to transition to RUN while the camera preview window is active.
-         * Either press STOP to exit the OpMode, or use the "options menu" again, and select "Camera Stream" to close the preview window.
-         */
-
         targets.activate();
+
+
+
+
+        waitForStart();
         while (!isStopRequested()) {
 
             // check all the trackable targets to see which one (if any) is visible.
@@ -228,7 +212,8 @@ public class ConceptVuforiaFieldNavigationWebcam extends LinearOpMode {
 
                     // getUpdatedRobotLocation() will return null if no new information is available since
                     // the last time that call was made, or if the trackable is not currently visible.
-                    OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+                    OpenGLMatrix robotLocationTransform =
+                            ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
                     if (robotLocationTransform != null) {
                         lastLocation = robotLocationTransform;
                     }
@@ -245,7 +230,8 @@ public class ConceptVuforiaFieldNavigationWebcam extends LinearOpMode {
 
                 // express the rotation of the robot in degrees.
                 Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-                telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+                telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f",
+                        rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
             }
             else {
                 telemetry.addData("Visible Target", "none");
@@ -259,12 +245,15 @@ public class ConceptVuforiaFieldNavigationWebcam extends LinearOpMode {
 
     /***
      * Identify a target by naming it, and setting its position and orientation on the field
-     * @param targetIndex
-     * @param targetName
+     * @param targetIndex .
+     * @param targetName .
      * @param dx, dy, dz  Target offsets in x,y,z axes
      * @param rx, ry, rz  Target rotations in x,y,z axes
      */
-    void    identifyTarget(int targetIndex, String targetName, float dx, float dy, float dz, float rx, float ry, float rz) {
+    void identifyTarget(VuforiaTrackables targets, int targetIndex, String targetName,
+                        float dx, float dy, float dz,
+                        float rx, float ry, float rz) {
+
         VuforiaTrackable aTarget = targets.get(targetIndex);
         aTarget.setName(targetName);
         aTarget.setLocation(OpenGLMatrix.translation(dx, dy, dz)

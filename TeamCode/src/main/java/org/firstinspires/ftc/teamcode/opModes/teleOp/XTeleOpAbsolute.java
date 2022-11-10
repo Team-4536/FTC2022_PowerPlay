@@ -57,7 +57,7 @@ public class XTeleOpAbsolute extends LinearOpMode{
                 telemetry.addChild(opModeTelemetry);
 
                 //change target angle with input
-                if(r.length() >= Constants.minTurnLength){
+                if(r.length() >= Constants.TURN_CUTOFF){
                     drivePID.target = PIDFunctions.angleWrap(drivePID.target - r.x); }
                 opModeTelemetry.addChild(new TelemetryData("Target Angle", drivePID.target));
 

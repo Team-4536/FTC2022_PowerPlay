@@ -50,7 +50,6 @@ public class XAutoStandardParking extends LinearOpMode {
         nav.timer.reset();
         while (opModeIsActive()) {
 
-
             NavFunctions.updateDt(nav);
             NavFunctions.updateHeading(nav);
 
@@ -58,8 +57,6 @@ public class XAutoStandardParking extends LinearOpMode {
                     drivePID,
                     nav.heading,
                     (float)nav.dt);
-
-
 
             if(zone == 0){
 
@@ -91,7 +88,7 @@ public class XAutoStandardParking extends LinearOpMode {
                 //sequence
 
                 Step c = SequencerFunctions.getStep(
-                        Constants.parkingSeqences[zone],
+                        Constants.PARKING_SEQUENCES[zone],
                         (float)nav.timer.seconds());
 
 

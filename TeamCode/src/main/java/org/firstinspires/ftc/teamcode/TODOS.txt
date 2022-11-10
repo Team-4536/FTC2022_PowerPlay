@@ -2,17 +2,26 @@
 TODO: Touch grass
 
 
-TODO: BNO0 calibration? // in examples!
+
+TODO: limits for lifter
+    [ ] bug build for limit switch
+    [ ] homing seq.
+    [ ] zero limit
+    [ ] up limit
 
 
+TODO: QR codes
 
 
 TODO: auto scoring
-        TODO: limits for lifter
-    TODO: QR codes
+    [ ] set camera offsets
+    [ ] integrate vuforia into navData
+    [ ] make robot stick to a target pos
+    [ ] nav image loss handling
+    [ ] scoring seqs. with cam
 
 
 
 
-TODO: better gripper
-TODO: get sweatshirt
+
+
