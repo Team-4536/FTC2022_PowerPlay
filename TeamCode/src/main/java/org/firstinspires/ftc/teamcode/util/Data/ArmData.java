@@ -5,16 +5,19 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 public class ArmData {
 
     public final @NonNull DcMotor liftMotor;
     public final @NonNull Servo gripServo;
+    public final @NonNull TouchSensor limitSwitch;
 
     public ArmData(HardwareMap map) {
         this.liftMotor = map.get(DcMotor.class, "lift_motor");
         this.liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         this.gripServo = map.get(Servo.class, "grip_servo");
+        this.limitSwitch = map.get(TouchSensor.class, "limit_switch");
     }
 
 }

@@ -37,7 +37,7 @@ public class XTeleOpAbsolute extends LinearOpMode{
             waitForStart();
             while(opModeIsActive()){
 
-
+                int baseArmPos = arm.liftMotor.getCurrentPosition();
 
                 V2f l = new V2f(
                         this.gamepad1.left_stick_x,
@@ -45,8 +45,6 @@ public class XTeleOpAbsolute extends LinearOpMode{
                 V2f r = new V2f(
                         this.gamepad1.right_stick_x,
                         -this.gamepad1.right_stick_y);
-
-
 
                 NavFunctions.updateDt(nav);
                 NavFunctions.updateHeading(nav);
@@ -97,19 +95,29 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
 
 
+                float lift = this.gamepad2.left_stick_y;
+                //if(arm.limitSwitch.isPressed()){
+                //    lift = (lift < 0)? 0:lift; //clamps from going lower than base
+                //
+                //    baseArmPos = arm.liftMotor.getCurrentPosition();
+                //}
+                telemetry.addChild("lift", lift);
+                telemetry.addChild("Switch", arm.limitSwitch.isPressed()? "pressed" : "up");
 
 
-
-
-                float liftSpeed = 2 * -this.gamepad2.left_stick_y;
-                arm.liftMotor.setPower(liftSpeed);
-                int pos = arm.liftMotor.getCurrentPosition();
-                telemetry.addChild("Lift pos", pos);
+                float liftSpeed = 2 * -lift;
                 telemetry.addChild("Lift speed", liftSpeed);
 
-                float servoPosition = this.gamepad2.a?0.15f:0;
+                arm.liftMotor.setPower(liftSpeed);
+
+                float armPos = arm.liftMotor.getCurrentPosition() - baseArmPos;
+                telemetry.addChild("Lift pos", armPos);
+
+                float servoPosition = this.gamepad1.right_bumper?1:0 - (this.gamepad1.left_bumper?1:0);
                 arm.gripServo.setPosition(servoPosition);
                 telemetry.addChild("Servo pos", arm.gripServo.getPosition());
+
+
 
 
 
