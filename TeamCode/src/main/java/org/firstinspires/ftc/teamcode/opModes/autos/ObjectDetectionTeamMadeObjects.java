@@ -48,6 +48,7 @@ public class ObjectDetectionTeamMadeObjects extends LinearOpMode {
                         new Step(new float[]{0, 0.4f}, 2)
                 },
 
+
                 new Step[]{
                         new Step(new float[]{0, 0.4f}, 2),
                 },
