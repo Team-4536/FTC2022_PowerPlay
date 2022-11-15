@@ -33,11 +33,13 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
             ArmData arm = new ArmData(this.hardwareMap);
 
+            float liftSpeed = 0;
+            int pos = 0;
 
             waitForStart();
             while(opModeIsActive()){
 
-
+                int baseArmPos = arm.liftMotor.getCurrentPosition();
 
                 V2f l = new V2f(
                         this.gamepad1.left_stick_x,
@@ -47,7 +49,7 @@ public class XTeleOpAbsolute extends LinearOpMode{
                         -this.gamepad1.right_stick_y);
 
 
-                float liftSpeed = this.gamepad1.right_trigger - this.gamepad1.left_trigger;
+                liftSpeed = this.gamepad1.right_trigger - this.gamepad1.left_trigger;
                 float servoPosition = this.gamepad1.right_bumper?1:0 - (this.gamepad1.left_bumper?1:0);
 
                 NavFunctions.updateDt(nav);
@@ -89,18 +91,33 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
 
 
-                arm.gripServo.setPosition(servoPosition);
-
-                int pos = arm.liftMotor.getCurrentPosition();
-                telemetry.addChild("Lift pos", pos);
-
-                //if(!(liftSpeed < 0 && pos < 10)){
-                //    arm.liftMotor.setPower(liftSpeed);
+                float lift = this.gamepad2.left_stick_y;
+                //if(arm.limitSwitch.isPressed()){
+                //    lift = (lift < 0)? 0:lift; //clamps from going lower than base
+                //
+                //    baseArmPos = arm.liftMotor.getCurrentPosition();
                 //}
-                //else if(liftSpeed > 0 && pos < Constants.ticksPerLiftRevolution) {
-                //    arm.liftMotor.setPower(liftSpeed);
-                //}
+                //telemetry.addChild("lift", lift);
+                //telemetry.addChild("Switch", arm.limitSwitch.isPressed()? "pressed" : "up");
+
+
+
+
+
+                liftSpeed = 2 * -lift;
                 arm.liftMotor.setPower(liftSpeed);
+                pos = arm.liftMotor.getCurrentPosition() - baseArmPos;
+
+
+
+                telemetry.addChild("Lift pos", pos);
+                telemetry.addChild("Lift speed", liftSpeed);
+
+                arm.gripServo.setPosition(servoPosition);
+                telemetry.addChild("Servo pos", arm.gripServo.getPosition());
+
+
+                telemetry.addChild("Diference between arm base and extent", baseArmPos - arm.liftMotor.getCurrentPosition());
 
 
                 TelemetryData servoTarget = new TelemetryData("Servo");
