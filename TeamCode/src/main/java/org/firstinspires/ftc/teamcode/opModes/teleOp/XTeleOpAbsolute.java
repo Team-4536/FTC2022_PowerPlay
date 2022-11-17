@@ -117,7 +117,7 @@ public class XTeleOpAbsolute extends LinearOpMode{
                 telemetry.addChild("Servo pos", arm.gripServo.getPosition());
 
 
-                telemetry.addChild("Diference between arm base and extent", baseArmPos - arm.liftMotor.getCurrentPosition());
+                telemetry.addChild("Difference between arm base and extent", baseArmPos - arm.liftMotor.getCurrentPosition());
 
 
                 TelemetryData servoTarget = new TelemetryData("Servo");
