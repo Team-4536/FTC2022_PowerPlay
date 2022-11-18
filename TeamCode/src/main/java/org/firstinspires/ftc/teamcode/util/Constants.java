@@ -34,5 +34,36 @@ public abstract class Constants {
                     "redDots"
             }
     );
+
+    public static final float TURN_CUTOFF = 0.5f;
+
+    public static final float defaultXDriveSpeed = 0.25f;
+
+
+
+
+
+    static final float zonesPwr = 0.25f;
+    static final float hTime = 3.4f;
+    static final float vTime = 4.0f;
+
+    public static Step[][] PARKING_SEQUENCES = new Step[][]{
+
+            new Step[] { },
+
+            new Step[]{
+                    new Step(new float[]{-zonesPwr, 0}, hTime),
+                    new Step(new float[]{0, zonesPwr}, vTime)
+            },
+
+            new Step[]{
+                    new Step(new float[]{0, zonesPwr}, vTime),
+            },
+
+            new Step[]{
+                    new Step(new float[]{zonesPwr, 0}, hTime),
+                    new Step(new float[]{0, zonesPwr}, vTime)
+            }
+    };
 }
 
