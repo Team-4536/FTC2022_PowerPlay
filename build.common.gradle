@@ -94,6 +94,7 @@ android {
             signingConfig signingConfigs.release
 
             ndk {
+                abiFilters "armebi-v7a"
 
             }
         }
@@ -101,6 +102,7 @@ android {
             debuggable true
             jniDebuggable true
             ndk {
+                abiFilters "armebi-v7a"
             }
         }
     }
