@@ -34,6 +34,7 @@ public class XTeleOpAbsolute extends LinearOpMode{
             ArmData arm = new ArmData(this.hardwareMap);
 
 
+
             waitForStart();
             while(opModeIsActive()){
 
@@ -51,7 +52,7 @@ public class XTeleOpAbsolute extends LinearOpMode{
                 NavFunctions.updateDt(nav);
                 NavFunctions.updateHeading(nav);
 
-
+                int baseArmPos = arm.liftMotor.getCurrentPosition();;
 
                 TelemetryData opModeTelemetry = new TelemetryData("OpMode");
                 telemetry.addChild(opModeTelemetry);
@@ -99,19 +100,25 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
 
 
-
-
-                float liftSpeed = 2 * -this.gamepad2.left_stick_y;
-                arm.liftMotor.setPower(liftSpeed);
                 int pos = arm.liftMotor.getCurrentPosition();
+                int armDiference = arm.liftMotor.getCurrentPosition() - baseArmPos;
+                float liftSpeed = 2 * -this.gamepad2.left_stick_y;
+
+                liftSpeed = (arm.limitSwitch.isPressed())? 0:liftSpeed;
+
+                arm.liftMotor.setPower(liftSpeed);
+
+
                 telemetry.addChild("Lift pos", pos);
                 telemetry.addChild("Lift speed", liftSpeed);
+                telemetry.addChild("Arm Base", baseArmPos);
+                telemetry.addChild("Arm Diference", armDiference);
+                float servoPosition = this.gamepad2.a?1:0.55f;
 
-                float servoPosition = this.gamepad2.a?0.15f:0;
                 arm.gripServo.setPosition(servoPosition);
                 telemetry.addChild("Servo pos", arm.gripServo.getPosition());
 
-
+//amongus
 
 
                 TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
