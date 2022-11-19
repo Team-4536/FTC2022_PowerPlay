@@ -26,8 +26,6 @@ public abstract class DriveFunctions {
               (drive + strafe + turn),
       };
 
-      //thank you internet, https://github.com/brandon-gong/ftc-mecanum/blob/master/MecanumDrive.java
-      // this normalizes speeds[] to between 0-1
       float max = Math.abs(speeds[0]);
       for (int i = 1; i < speeds.length; i++) {
          if (max < Math.abs(speeds[i])) {
@@ -35,7 +33,6 @@ public abstract class DriveFunctions {
          }
       }
 
-      //if the controller is only asking for a small amount, only move a small amount
       if (max > 1) {
          for (int i = 0; i < speeds.length; i++) {
             speeds[i] /= max; } }

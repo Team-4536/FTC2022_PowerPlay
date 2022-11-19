@@ -78,9 +78,10 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
                 //multiplier for drive speed.
                 float mod = Constants.defaultXDriveSpeed
-                        + ((1-Constants.defaultXDriveSpeed)*this.gamepad1.right_trigger);
-                //float mod = 1.0f;
-                telemetry.addChild("Percent", mod);
+                        + ( (1-Constants.defaultXDriveSpeed)
+                            * this.gamepad1.right_trigger);
+
+                telemetry.addChild("Drive modifier", mod);
                 in = new V2f(
                         in.x * mod,
                         in.y * mod);
