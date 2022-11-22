@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opModes.autos;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 
 //https://github.com/OpenFTC/EOCV-AprilTag-Plugin
 
+@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="OpenCV", group="Autos")
 public class OpenCVCameraDetection extends LinearOpMode
 {
@@ -55,7 +57,7 @@ public class OpenCVCameraDetection extends LinearOpMode
         int ID_TAG_OF_INTEREST = 1; // Tag ID 18 from the 36h11 family
 
         int foundTag = -1;
-
+        int zone = -1;
         AprilTagDetection tagOfInterest = null;
 
         @Override
@@ -116,6 +118,10 @@ public class OpenCVCameraDetection extends LinearOpMode
 
                 while (opModeIsActive()) {
 
+                        if(foundTag != -1){
+                                nav.timer.reset();
+                        }
+
                         NavFunctions.updateDt(nav);
                         NavFunctions.updateHeading(nav);
 
@@ -144,18 +150,43 @@ public class OpenCVCameraDetection extends LinearOpMode
                                 TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
                                 if (foundTag == 0) {
                                         telemetry.addChild("Tag Found:", foundTag);
+                                        zone = 1;
                                 }
                                 if (foundTag == 1) {
                                         telemetry.addChild("Tag Found:", foundTag);
+                                        zone = 2;
                                 }
                                 if (foundTag == 2) {
                                         telemetry.addChild("Tag Found:", foundTag);
+                                        zone = 3;
                                 }
 
                                 TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
                         }
 
 
+                }
+                if(zone != 0){
+                        //if a zone is detected, set motor pwr with current step of that zones
+                        //sequence
+
+                        Step c = SequencerFunctions.getStep(Constants.PARKING_SEQUENCES[zone], (float)nav.timer.seconds());
+
+
+                        /*if(c.data.length == 0) {
+                                telemetry.addChild("Step invalid", "");
+                                DriveFunctions.setPower(
+                                        drive,
+                                        new V2f(0, 0),
+                                        PIDOut);
+                        }
+                        else
+                        {
+                                DriveFunctions.setPower(
+                                        drive,
+                                        new V2f(c.data[0], c.data[1]),
+                                        PIDOut);
+                        }*/
                 }
 
                 /*

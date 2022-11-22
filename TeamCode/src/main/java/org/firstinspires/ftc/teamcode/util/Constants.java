@@ -46,12 +46,10 @@ public abstract class Constants {
     );
 
 
-
-
-
     public static final float TURN_CUTOFF = 0.5f;
 
     public static final float defaultXDriveSpeed = 0.25f;
+
 
     public static final float mechStrafeMod = 0.9f;
     public static final float mechDriveMod = 0.6f;

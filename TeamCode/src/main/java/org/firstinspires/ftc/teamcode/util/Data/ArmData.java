@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.util.Data;
 
+import android.widget.Switch;
+
 import androidx.annotation.NonNull;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -12,6 +14,7 @@ public class ArmData {
     public final @NonNull DcMotor liftMotor;
     public final @NonNull Servo gripServo;
     public final @NonNull TouchSensor limitSwitch;
+
 
     public ArmData(HardwareMap map) {
         this.liftMotor = map.get(DcMotor.class, "lift_motor");
