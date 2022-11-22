@@ -48,14 +48,15 @@ public class XTeleOpAbsolute extends LinearOpMode{
                     -this.gamepad1.right_stick_y);
 
 
-
             NavFunctions.updateDt(nav);
             NavFunctions.updateHeading(nav);
 
             int baseArmPos = arm.liftMotor.getCurrentPosition();;
 
+
             TelemetryData opModeTelemetry = new TelemetryData("OpMode");
             telemetry.addChild(opModeTelemetry);
+
 
             //change target angle with input
             if(r.length() >= Constants.TURN_CUTOFF){
@@ -76,9 +77,6 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
 
 
-            //rotate drive input to be relative to start angle, not current angle
-            V2f in = new V2f(l.x, l.y);
-
             //multiplier for drive speed.
             float mod = Constants.defaultXDriveSpeed
                     + ((1-Constants.defaultXDriveSpeed)*this.gamepad1.right_trigger);
@@ -96,15 +94,30 @@ public class XTeleOpAbsolute extends LinearOpMode{
                     in,
                     PIDOut);
 
+            //multiplier for drive speed.
+            float mod = Constants.defaultXDriveSpeed
+                    + ((1-Constants.defaultXDriveSpeed)*this.gamepad1.right_trigger);
+            //float mod = 1.0f;
+            telemetry.addChild("Percent", mod);
+            in = new V2f(
+                    in.x * mod,
+                    in.y * mod);
+            in = in.rotated(-nav.heading);
+            opModeTelemetry.addChild(new TelemetryData("Drive", in));
 
 
 
+            float lift = this.gamepad2.left_stick_y;
+            if(arm.limitSwitch.isPressed()){
+                lift = (lift > 0)? 0:lift; //clamps from going lower than b
+                baseArmPos = arm.liftMotor.getCurrentPosition();
+            }
+            float liftSpeed = 2 * -lift;
+            telemetry.addChild("Lift speed", liftSpeed);
 
             int pos = arm.liftMotor.getCurrentPosition();
             int armDiference = arm.liftMotor.getCurrentPosition() - baseArmPos;
-            float liftSpeed = 2 * -this.gamepad2.left_stick_y;
 
-            //liftSpeed = (arm.limitSwitch.isPressed())? 0:liftSpeed;
 
             arm.liftMotor.setPower(liftSpeed);
 
@@ -115,10 +128,12 @@ public class XTeleOpAbsolute extends LinearOpMode{
             telemetry.addChild("Arm Diference", armDiference);
             float servoPosition = this.gamepad2.a?1:0.55f;
 
+
+            float servoPosition = this.gamepad1.right_bumper?1:0 - (this.gamepad1.left_bumper?1:0);
             arm.gripServo.setPosition(servoPosition);
             telemetry.addChild("Servo pos", arm.gripServo.getPosition());
 
-//amongus
+            //amongus
 
 
             TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);

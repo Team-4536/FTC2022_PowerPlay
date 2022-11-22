@@ -38,7 +38,6 @@ public class ObjectDetectionData {
          */
 
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
         parameters.vuforiaLicenseKey = Constants.VUFORIA_KEY;
         // parameters.cameraDirection = CameraDirection.BACK;
         parameters.cameraName = map.get(WebcamName.class, "Webcam 1");
