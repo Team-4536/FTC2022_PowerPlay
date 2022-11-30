@@ -29,7 +29,7 @@ public class XTeleOpAbsolute extends LinearOpMode{
         DriveData drive = new DriveData(
                 new boolean[] {true, false, true, false},
                 this.hardwareMap);
-        PIDData drivePID = new PIDData(0.018f, 0.0f, -0.2f);
+        PIDData drivePID = new PIDData(0.015f, 0.0f, -0.2f);
 
         ArmData arm = new ArmData(this.hardwareMap);
 
@@ -51,7 +51,6 @@ public class XTeleOpAbsolute extends LinearOpMode{
             NavFunctions.updateDt(nav);
             NavFunctions.updateHeading(nav);
 
-            int baseArmPos = arm.liftMotor.getCurrentPosition();;
 
 
             TelemetryData opModeTelemetry = new TelemetryData("OpMode");
@@ -60,7 +59,10 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
             //change target angle with input
             if(r.length() >= Constants.TURN_CUTOFF){
-                drivePID.target = PIDFunctions.angleWrap(drivePID.target - r.x); }
+                float mod = Constants.defaultXTurnSpeed
+                        + ((Constants.maxXTurnSpeed-Constants.defaultXTurnSpeed)*this.gamepad1.left_trigger);
+                drivePID.target = PIDFunctions.angleWrap(drivePID.target - (r.x * mod));
+            }
             opModeTelemetry.addChild(new TelemetryData("Target Angle", drivePID.target));
 
 
@@ -82,9 +84,9 @@ public class XTeleOpAbsolute extends LinearOpMode{
                     + ((1-Constants.defaultXDriveSpeed)*this.gamepad1.right_trigger);
             //float mod = 1.0f;
             telemetry.addChild("Percent", mod);
-            in = new V2f(
-                    in.x * mod,
-                    in.y * mod);
+            V2f in = new V2f(
+                    l.x * mod,
+                    l.y * mod);
             in = in.rotated(-nav.heading);
             opModeTelemetry.addChild(new TelemetryData("Drive", in));
 
@@ -94,47 +96,36 @@ public class XTeleOpAbsolute extends LinearOpMode{
                     in,
                     PIDOut);
 
-            //multiplier for drive speed.
-            float mod = Constants.defaultXDriveSpeed
-                    + ((1-Constants.defaultXDriveSpeed)*this.gamepad1.right_trigger);
-            //float mod = 1.0f;
-            telemetry.addChild("Percent", mod);
-            in = new V2f(
-                    in.x * mod,
-                    in.y * mod);
-            in = in.rotated(-nav.heading);
-            opModeTelemetry.addChild(new TelemetryData("Drive", in));
 
 
 
-            float lift = this.gamepad2.left_stick_y;
-            if(arm.limitSwitch.isPressed()){
-                lift = (lift > 0)? 0:lift; //clamps from going lower than b
-                baseArmPos = arm.liftMotor.getCurrentPosition();
+            {
+                float lift = this.gamepad2.left_stick_y;
+                int baseArmPos = arm.liftMotor.getCurrentPosition();;
+                if(arm.limitSwitch.isPressed()){
+                    lift = (lift > 0)? 0:lift; //clamps from going lower than b
+                    baseArmPos = arm.liftMotor.getCurrentPosition();
+                }
+                float liftSpeed = 2 * -lift;
+                telemetry.addChild("Lift speed", liftSpeed);
+
+                int pos = arm.liftMotor.getCurrentPosition();
+                int armDiference = arm.liftMotor.getCurrentPosition() - baseArmPos;
+
+
+
+
+                arm.liftMotor.setPower(liftSpeed);
+                telemetry.addChild("Lift pos", pos);
+                telemetry.addChild("Lift speed", liftSpeed);
+                telemetry.addChild("Arm Base", baseArmPos);
+                telemetry.addChild("Arm Diference", armDiference);
             }
-            float liftSpeed = 2 * -lift;
-            telemetry.addChild("Lift speed", liftSpeed);
 
-            int pos = arm.liftMotor.getCurrentPosition();
-            int armDiference = arm.liftMotor.getCurrentPosition() - baseArmPos;
-
-
-            arm.liftMotor.setPower(liftSpeed);
-
-
-            telemetry.addChild("Lift pos", pos);
-            telemetry.addChild("Lift speed", liftSpeed);
-            telemetry.addChild("Arm Base", baseArmPos);
-            telemetry.addChild("Arm Diference", armDiference);
-            float servoPosition = this.gamepad2.a?1:0.55f;
-
-
-            float servoPosition = this.gamepad1.right_bumper?1:0 - (this.gamepad1.left_bumper?1:0);
-            arm.gripServo.setPosition(servoPosition);
-            telemetry.addChild("Servo pos", arm.gripServo.getPosition());
-
-            //amongus
-
+            { // Servo
+                arm.gripServo.setPosition(this.gamepad2.a ? 1 : 0.55f);
+                telemetry.addChild("Servo pos", arm.gripServo.getPosition());
+            }
 
             TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
         }

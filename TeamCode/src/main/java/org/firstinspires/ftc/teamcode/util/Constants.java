@@ -49,6 +49,8 @@ public abstract class Constants {
     public static final float TURN_CUTOFF = 0.5f;
 
     public static final float defaultXDriveSpeed = 0.25f;
+    public static final float defaultXTurnSpeed = 1.0f;
+    public static final float maxXTurnSpeed = 3.0f;
 
 
     public static final float mechStrafeMod = 0.9f;
@@ -57,8 +59,8 @@ public abstract class Constants {
 
 
 
-    static final float zonesPwr = 0.25f;
-    static final float hTime = 3.4f;
+    static final float zonesPwr = 0.2f;
+    static final float hTime = 3.1f;
     static final float vTime = 4.0f;
 
     public static Step[][] PARKING_SEQUENCES = new Step[][]{
