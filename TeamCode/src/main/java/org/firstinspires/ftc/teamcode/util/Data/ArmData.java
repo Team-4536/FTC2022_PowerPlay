@@ -12,6 +12,8 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 public class ArmData {
 
     public final @NonNull DcMotor liftMotor;
+    public int basePos = 0;
+
     public final @NonNull Servo gripServo;
     public final @NonNull TouchSensor limitSwitch;
 

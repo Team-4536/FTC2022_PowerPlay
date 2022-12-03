@@ -39,7 +39,7 @@ public abstract class Constants {
     public static final Model CUSTOM_SLEEVE_MODEL = new Model(
             "custumModel.tflite",
             new String[]{
-                    "BlueLines",
+
                     "GreenLines",
                     "redDots"
             }
@@ -59,7 +59,7 @@ public abstract class Constants {
 
 
 
-    static final float zonesPwr = 0.2f;
+    static final float zonesPwr = 0.21f;
     static final float hTime = 3.1f;
     static final float vTime = 4.0f;
 

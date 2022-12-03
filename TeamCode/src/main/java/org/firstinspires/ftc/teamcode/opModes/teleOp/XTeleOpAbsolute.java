@@ -35,6 +35,18 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
 
 
+
+        arm.gripServo.setPosition(0.55f);
+        while(!arm.limitSwitch.isPressed()){
+            arm.liftMotor.setPower(-0.5f);
+        }
+
+        arm.basePos = arm.liftMotor.getCurrentPosition();
+        arm.liftMotor.setPower(0.0f);
+
+
+
+
         waitForStart();
         while(opModeIsActive()){
 
@@ -101,16 +113,15 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
             {
                 float lift = this.gamepad2.left_stick_y;
-                int baseArmPos = arm.liftMotor.getCurrentPosition();;
                 if(arm.limitSwitch.isPressed()){
                     lift = (lift > 0)? 0:lift; //clamps from going lower than b
-                    baseArmPos = arm.liftMotor.getCurrentPosition();
+                    arm.basePos = arm.liftMotor.getCurrentPosition();
                 }
                 float liftSpeed = 2 * -lift;
                 telemetry.addChild("Lift speed", liftSpeed);
 
                 int pos = arm.liftMotor.getCurrentPosition();
-                int armDiference = arm.liftMotor.getCurrentPosition() - baseArmPos;
+                int armDifference = arm.liftMotor.getCurrentPosition() - arm.basePos;
 
 
 
@@ -118,8 +129,8 @@ public class XTeleOpAbsolute extends LinearOpMode{
                 arm.liftMotor.setPower(liftSpeed);
                 telemetry.addChild("Lift pos", pos);
                 telemetry.addChild("Lift speed", liftSpeed);
-                telemetry.addChild("Arm Base", baseArmPos);
-                telemetry.addChild("Arm Diference", armDiference);
+                telemetry.addChild("Arm Base", arm.basePos);
+                telemetry.addChild("Arm Difference", armDifference);
             }
 
             { // Servo
