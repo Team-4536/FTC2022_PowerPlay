@@ -112,16 +112,25 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
 
             {
+                int pos = arm.liftMotor.getCurrentPosition();
+                int armDifference = arm.liftMotor.getCurrentPosition() - arm.basePos;
+
+
                 float lift = this.gamepad2.left_stick_y;
+
+
                 if(arm.limitSwitch.isPressed()){
                     lift = (lift > 0)? 0:lift; //clamps from going lower than b
                     arm.basePos = arm.liftMotor.getCurrentPosition();
                 }
+
+                if(armDifference > 12000){
+                    lift = (lift < 0)?0:lift;
+                }
+
                 float liftSpeed = 2 * -lift;
                 telemetry.addChild("Lift speed", liftSpeed);
 
-                int pos = arm.liftMotor.getCurrentPosition();
-                int armDifference = arm.liftMotor.getCurrentPosition() - arm.basePos;
 
 
 
