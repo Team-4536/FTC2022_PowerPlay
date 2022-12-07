@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.util.Data.NavData;
 import org.firstinspires.ftc.teamcode.util.Data.PIDData;
 import org.firstinspires.ftc.teamcode.util.Data.TelemetryData;
 import org.firstinspires.ftc.teamcode.util.V2f;
-
+import org.firstinspires.ftc.teamcode.functions.InitArm;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="X teleOp abs", group="TeleOps")
 public class XTeleOpAbsolute extends LinearOpMode{
@@ -36,14 +36,7 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
 
 
-        arm.gripServo.setPosition(0.55f);
-        while(!arm.limitSwitch.isPressed()){
-            arm.liftMotor.setPower(-0.5f);
-        }
-
-        arm.basePos = arm.liftMotor.getCurrentPosition();
-        arm.liftMotor.setPower(0.0f);
-
+        InitArm.arm_init(arm);
 
 
 

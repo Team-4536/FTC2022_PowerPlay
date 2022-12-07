@@ -3,41 +3,34 @@ package org.firstinspires.ftc.teamcode.opModes.autos;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.functions.InitArm;
-import org.firstinspires.ftc.teamcode.util.Data.AprilTagDetectionPipeline;
-import org.firstinspires.ftc.teamcode.util.Data.ArmData;
-import org.openftc.apriltag.AprilTagDetection;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.functions.DriveFunctions;
 import org.firstinspires.ftc.teamcode.functions.NavFunctions;
 import org.firstinspires.ftc.teamcode.functions.PIDFunctions;
 import org.firstinspires.ftc.teamcode.functions.SequencerFunctions;
 import org.firstinspires.ftc.teamcode.functions.TelemetryFunctions;
 import org.firstinspires.ftc.teamcode.util.Constants;
+import org.firstinspires.ftc.teamcode.util.Data.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.util.Data.DriveData;
 import org.firstinspires.ftc.teamcode.util.Data.NavData;
-import org.firstinspires.ftc.teamcode.util.Data.ObjectDetectionData;
 import org.firstinspires.ftc.teamcode.util.Data.PIDData;
 import org.firstinspires.ftc.teamcode.util.Data.TelemetryData;
 import org.firstinspires.ftc.teamcode.util.Step;
 import org.firstinspires.ftc.teamcode.util.V2f;
-
+import org.openftc.apriltag.AprilTagDetection;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
 
 //https://github.com/OpenFTC/EOCV-AprilTag-Plugin
 
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="WorkingOpenCV", group="Autos")
+@Autonomous(name="OpenCV and Feild", group="Autos")
 
-public class WorkingOpenCV extends LinearOpMode
+public class OpenCVWithImages extends LinearOpMode
 {
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -115,9 +108,6 @@ public class WorkingOpenCV extends LinearOpMode
         waitForStart();
         nav.timer.reset();
 
-        ArmData arm = new ArmData(this.hardwareMap);
-
-        InitArm.arm_init(arm);
 
         int zone = 0;
 
@@ -127,9 +117,7 @@ public class WorkingOpenCV extends LinearOpMode
 
         while (opModeIsActive()) {
 
-            /*if(foundTag != -1){
-                nav.timer.reset();
-            }*/
+
             NavFunctions.updateDt(nav);
             NavFunctions.updateHeading(nav);
 
@@ -158,7 +146,8 @@ public class WorkingOpenCV extends LinearOpMode
                     nav.timer.reset();
                 }
 
-            } else {
+            }
+            else {
                 telemetry.addChild("Tag Found:", foundTag);
                 //telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
                 //telemetry.addChild("\nDetected tag ID=%d", foundTag);
@@ -182,7 +171,7 @@ public class WorkingOpenCV extends LinearOpMode
 
             }
 
-            if (zone != 0) {
+            /*if (zone != 0) {
                 //if a zone is detected, set motor pwr with current step of that zones
                 //sequence
 
@@ -201,7 +190,10 @@ public class WorkingOpenCV extends LinearOpMode
                             new V2f(c.data[0], c.data[1]),
                             PIDOut);
                 }
-            }
+            }*/
+
+
+
             telemetry.addChild("Detected zone", zone);
             telemetry.addChild("current time", nav.timer.seconds());
             TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
