@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.util.Data.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.util.Data.ArmData;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -71,25 +72,15 @@ public class WorkingOpenCV extends LinearOpMode
                 this.hardwareMap);
         PIDData drivePID = new PIDData(0.018f, 0.0f, -0.2f);
 
+        ArmData arm = new ArmData(hardwareMap);
 
-        Step[][] autos = new Step[][]{
 
-                new Step[]{},
+        TelemetryData ci = new TelemetryData();
+        telemetry.addChild(ci);
+        ci.title = "yg;uirguhlsrtguh;sgbrhj;sreguh;srge;ioj";
+        Constants.initArm(arm, ci);
 
-                new Step[]{
-                        new Step(new float[]{-0.4f, 0f}, 2),
-                        new Step(new float[]{0, 0.4f}, 2)
-                },
 
-                new Step[]{
-                        new Step(new float[]{0, 0.4f}, 2),
-                },
-
-                new Step[]{
-                        new Step(new float[]{0.4f, 0f}, 2),
-                        new Step(new float[]{0, 0.4f}, 2)
-                }
-        };
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);

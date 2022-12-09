@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import org.firstinspires.ftc.teamcode.util.Data.ArmData;
+import org.firstinspires.ftc.teamcode.util.Data.TelemetryData;
+
 public abstract class Constants {
 
 
@@ -18,9 +21,6 @@ public abstract class Constants {
     final float CAMERA_FORWARD      = 0.0f * MM_PER_INCH;
     final float CAMERA              = 6.0f * MM_PER_INCH;
     final float CAMERA_LEFT         = 0.0f * MM_PER_INCH;
-
-
-
 
 
 
@@ -59,7 +59,7 @@ public abstract class Constants {
 
 
 
-    static final float zonesPwr = 0.21f;
+    static final float zonesPwr = 0.23f;
     static final float hTime = 3.1f;
     static final float vTime = 4.0f;
 
@@ -81,5 +81,21 @@ public abstract class Constants {
                     new Step(new float[]{0, zonesPwr}, vTime)
             }
     };
+
+
+    public static final float SERVO_CLOSED = 0.0f;
+    public static final float SERVO_OPEN =1.0f;
+
+    public static void initArm(ArmData a, TelemetryData d){
+
+        d.info = String.valueOf(a.gripServo.getPosition());
+        a.gripServo.setPosition(SERVO_CLOSED);
+        while(!a.limitSwitch.isPressed()){
+            a.liftMotor.setPower(-0.5f);
+        }
+
+        a.basePos = a.liftMotor.getCurrentPosition();
+        a.liftMotor.setPower(0.0f);
+    }
 }
 

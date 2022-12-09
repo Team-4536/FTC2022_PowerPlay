@@ -35,15 +35,11 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
 
 
-
-        arm.gripServo.setPosition(0.55f);
-        while(!arm.limitSwitch.isPressed()){
-            arm.liftMotor.setPower(-0.5f);
-        }
-
-        arm.basePos = arm.liftMotor.getCurrentPosition();
-        arm.liftMotor.setPower(0.0f);
-
+        TelemetryData c = new TelemetryData();
+        telemetry.addChild(c);
+        c.title = "yg;uirguhlsrtguh;sgbrhj;sreguh;srge;ioj";
+        Constants.initArm(arm, c);
+        TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
 
 
 
@@ -143,7 +139,7 @@ public class XTeleOpAbsolute extends LinearOpMode{
             }
 
             { // Servo
-                arm.gripServo.setPosition(this.gamepad2.a ? 1 : 0.55f);
+                arm.gripServo.setPosition(this.gamepad2.a ? Constants.SERVO_OPEN : Constants.SERVO_CLOSED);
                 telemetry.addChild("Servo pos", arm.gripServo.getPosition());
             }
 
