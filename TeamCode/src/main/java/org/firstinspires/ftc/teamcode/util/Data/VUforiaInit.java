@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util.Data;
+/*package org.firstinspires.ftc.teamcode.util.Data;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
@@ -87,7 +87,7 @@ public class VUforiaInit {
                  *
                  * Before being transformed, each target image is conceptually located at the origin of the field's
                  *  coordinate system (the center of the field), facing up.
-                 */
+
 
                 // Name and locate each trackable object
                 identifyTarget(targets, 0, "Red Left",
@@ -129,14 +129,14 @@ public class VUforiaInit {
                  *
                  * Finally the camera can be translated to its actual mounting position on the robot.
                  *      In this example, it is centered on the robot (left-to-right and front-to-back), and 6 inches above ground level.
-                 */
+
 
 
                 OpenGLMatrix cameraLocationOnRobot = OpenGLMatrix
                         .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
                         .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, 90, 0));
 
-                /**  Let all the trackable listeners know where the camera is.  */
+                /**  Let all the trackable listeners know where the camera is.
                 for (VuforiaTrackable trackable : allTrackables) {
                     ((VuforiaTrackableDefaultListener) trackable.getListener()).
                             setCameraLocationOnRobot(parameters.cameraName, cameraLocationOnRobot);
@@ -149,7 +149,7 @@ public class VUforiaInit {
          * @param targetName .
          * @param dx, dy, dz  Target offsets in x,y,z axes
          * @param rx, ry, rz  Target rotations in x,y,z axes
-         */
+
         void identifyTarget(VuforiaTrackables targets, int targetIndex, String targetName,
                 float dx, float dy, float dz,
                 float rx, float ry, float rz) {
@@ -162,3 +162,4 @@ public class VUforiaInit {
     }
 
 }
+*/

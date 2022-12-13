@@ -78,7 +78,7 @@ public class WorkingOpenCV extends LinearOpMode
 
         TelemetryData ci = new TelemetryData();
         telemetry.addChild(ci);
-        ci.title = "yg;uirguhlsrtguh;sgbrhj;sreguh;srge;ioj";
+        ci.title = "Arm Initialized!";
         Constants.initArm(arm, ci);
 
 
@@ -102,19 +102,32 @@ public class WorkingOpenCV extends LinearOpMode
 
         telemetry.addChild("Initialized!", "");
         TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
-        waitForStart();
+
         nav.timer.reset();
 
-        ArmData arm = new ArmData(this.hardwareMap);
+        ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
+        if (foundTag == -1) {
+            telemetry.addChild("length", currentDetections.size());
+            if (currentDetections.size() != 0) {
+
+                for (AprilTagDetection tag : currentDetections) {
+                    foundTag = tag.id;
+                    telemetry.addChild("Tag Found:", foundTag);
+                    TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
+                    break;
+
+                }
+            }
+        }
+        telemetry.addChild("Tag: ", foundTag);
 
         InitArm.arm_init(arm);
 
         int zone = 0;
 
+        TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
 
-
-
-
+        waitForStart();
         while (opModeIsActive()) {
 
             /*if(foundTag != -1){
@@ -129,26 +142,14 @@ public class WorkingOpenCV extends LinearOpMode
                     (float) nav.dt);
 
 
-            ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
-            if (foundTag == -1) {
-                telemetry.addChild("length", currentDetections.size());
-                if (currentDetections.size() != 0) {
-
-                    for (AprilTagDetection tag : currentDetections) {
-                        foundTag = tag.id;
-                        telemetry.addChild("Tag Found:", foundTag);
-                        TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
-                        break;
-
-                    }
-                }
 
 
-                if (foundTag != -1) {
+
+                /*if (foundTag != -1) {
                     nav.timer.reset();
-                }
+                }*/
 
-            } else {
+
                 telemetry.addChild("Tag Found:", foundTag);
                 //telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
                 //telemetry.addChild("\nDetected tag ID=%d", foundTag);
@@ -170,7 +171,7 @@ public class WorkingOpenCV extends LinearOpMode
 
                 //if the zone is found this iteration, reset timer to work w/ sequencer
 
-            }
+
 
             if (zone != 0) {
                 //if a zone is detected, set motor pwr with current step of that zones
