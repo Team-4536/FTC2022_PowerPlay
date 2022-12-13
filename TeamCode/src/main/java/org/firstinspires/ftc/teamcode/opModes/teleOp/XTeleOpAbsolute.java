@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.util.Data.NavData;
 import org.firstinspires.ftc.teamcode.util.Data.PIDData;
 import org.firstinspires.ftc.teamcode.util.Data.TelemetryData;
 import org.firstinspires.ftc.teamcode.util.V2f;
-import org.firstinspires.ftc.teamcode.functions.InitArm;
+
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="X teleOp abs", group="TeleOps")
 public class XTeleOpAbsolute extends LinearOpMode{
@@ -35,8 +35,11 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
 
 
-
-        InitArm.arm_init(arm);
+        TelemetryData c = new TelemetryData();
+        telemetry.addChild(c);
+        c.title = "yg;uirguhlsrtguh;sgbrhj;sreguh;srge;ioj";
+        Constants.initArm(arm, c);
+        TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
 
 
 
@@ -136,7 +139,7 @@ public class XTeleOpAbsolute extends LinearOpMode{
             }
 
             { // Servo
-                arm.gripServo.setPosition(this.gamepad2.a ? 1 : 0.55f);
+                arm.gripServo.setPosition(this.gamepad2.a ? Constants.SERVO_OPEN : Constants.SERVO_CLOSED);
                 telemetry.addChild("Servo pos", arm.gripServo.getPosition());
             }
 
