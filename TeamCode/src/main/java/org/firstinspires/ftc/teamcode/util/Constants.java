@@ -60,8 +60,8 @@ public abstract class Constants {
 
 
     static final float zonesPwr = 0.23f;
-    static final float hTime = 3.1f;
-    static final float vTime = 4.0f;
+    static final float hTime = 2.4f;
+    static final float vTime = 4.2f;
 
     public static Step[][] PARKING_SEQUENCES = new Step[][]{
 
