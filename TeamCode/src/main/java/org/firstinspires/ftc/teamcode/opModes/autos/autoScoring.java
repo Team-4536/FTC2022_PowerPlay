@@ -8,6 +8,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -18,33 +19,31 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.functions.DriveFunctions;
+import org.firstinspires.ftc.teamcode.functions.NavFunctions;
+import org.firstinspires.ftc.teamcode.functions.PIDFunctions;
+import org.firstinspires.ftc.teamcode.functions.TelemetryFunctions;
 import org.firstinspires.ftc.teamcode.util.Constants;
+import org.firstinspires.ftc.teamcode.util.Data.DriveData;
+import org.firstinspires.ftc.teamcode.util.Data.NavData;
+import org.firstinspires.ftc.teamcode.util.Data.PIDData;
+import org.firstinspires.ftc.teamcode.util.Data.TelemetryData;
+import org.firstinspires.ftc.teamcode.util.V2f;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@TeleOp(name="XAutoScoring", group ="Concept")
+@TeleOp(name="XAutoScoring", group ="Autos")
 public class autoScoring extends LinearOpMode {
 
 
-    // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
-    // We will define some constants and conversions here
-    private static final float mmPerInch        = 25.4f;
-    private static final float mmTargetHeight   = 6 * mmPerInch;          // the height of the center of the target image above the floor
-    private static final float halfField        = 72 * mmPerInch;
-    private static final float halfTile         = 12 * mmPerInch;
-    private static final float oneAndHalfTile   = 36 * mmPerInch;
-
     // Class Members
     private OpenGLMatrix lastLocation   = null;
-
-    private boolean targetVisible       = false;
 
     @Override public void runOpMode() {
 
         // VUFORIA INIT
         // Same code as object detector, besides camMonitor, plz look into more
-
         int cameraMonitorViewId = hardwareMap.appContext.getResources()
                 .getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -53,7 +52,10 @@ public class autoScoring extends LinearOpMode {
         // parameters.useExtendedTracking = false;
         VuforiaLocalizer vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
-        //============================================================================
+        DriveData drive = new DriveData(Constants.XFlipMap, this.hardwareMap);
+        NavData nav = new NavData(this.hardwareMap);
+        PIDData drivePID = new PIDData(0.015f, 0.0f, -0.2f);
+        drivePID.target=90;
 
 
 
@@ -62,24 +64,52 @@ public class autoScoring extends LinearOpMode {
 
 
 
-        //SETUP TARGETS
-        // Load the data sets for the trackable objects. These particular data
-        // sets are stored in the 'assets' part of our application.
+
+
+        // forward from center
+        //final float CAMERA_FORWARD_DISPLACEMENT  = 0.0f * Constants.MM_PER_INCH;
+        // distance up
+        //final float CAMERA_VERTICAL_DISPLACEMENT = 6.0f * Constants.MM_PER_INCH;
+        //final float CAMERA_LEFT_DISPLACEMENT     = 0.0f * Constants.MM_PER_INCH;
+
+
+        OpenGLMatrix cameraLocationOnRobot = OpenGLMatrix
+                .translation(0, 0, 0)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, 90, 0));
+
+
+
+
+
+
+
+
+
+
+        //=====================================================================================
         VuforiaTrackables targets = vuforia.loadTrackablesFromAsset("PowerPlay");
         List<VuforiaTrackable> allTrackables = new ArrayList<>(targets);
 
-        // Name and locate each trackable object
-        identifyTarget(targets, 0, "Red Left",
-                -halfField,  -oneAndHalfTile, mmTargetHeight, 90, 0,  90);
+        registerTarget(targets, 0, "Red Left",
+                -Constants.HALF_FIELD_MM,  -(Constants.HALF_FIELD_MM + Constants.HALF_TILE_MM), Constants.IMG_HEIGHT_MM, 90, 0,  90);
 
-        identifyTarget(targets, 1, "Red Right",
-                halfField,  -oneAndHalfTile, mmTargetHeight, 90, 0, -90);
+        registerTarget(targets, 1, "Red Right",
+                Constants.HALF_FIELD_MM,  -(Constants.HALF_FIELD_MM + Constants.HALF_TILE_MM), Constants.IMG_HEIGHT_MM, 90, 0, -90);
 
-        identifyTarget(targets, 2, "Blue Right",
-                -halfField,   oneAndHalfTile, mmTargetHeight, 90, 0,  90);
+        registerTarget(targets, 2, "Blue Right",
+                -Constants.HALF_FIELD_MM, (Constants.HALF_FIELD_MM + Constants.HALF_TILE_MM), Constants.IMG_HEIGHT_MM, 90, 0,  90);
 
-        identifyTarget(targets, 3, "Blue Left",
-                halfField,   oneAndHalfTile, mmTargetHeight, 90, 0, -90);
+        registerTarget(targets, 3, "Blue Left",
+                Constants.HALF_FIELD_MM, (Constants.HALF_FIELD_MM + Constants.HALF_TILE_MM), Constants.IMG_HEIGHT_MM, 90, 0, -90);
+
+
+
+
+        for (VuforiaTrackable trackable : allTrackables) {
+            ((VuforiaTrackableDefaultListener) trackable.getListener()).
+                    setCameraLocationOnRobot(parameters.cameraName, cameraLocationOnRobot);
+        }
+        targets.activate();
         //======================================================================================
 
 
@@ -89,30 +119,16 @@ public class autoScoring extends LinearOpMode {
 
 
 
-        final float CAMERA_FORWARD_DISPLACEMENT  = 0.0f * mmPerInch;   // eg: Enter the forward distance from the center of the robot to the camera lens
-        final float CAMERA_VERTICAL_DISPLACEMENT = 6.0f * mmPerInch;   // eg: Camera is 6 Inches above ground
-        final float CAMERA_LEFT_DISPLACEMENT     = 0.0f * mmPerInch;   // eg: Enter the left distance from the center of the robot to the camera lens
-
-        OpenGLMatrix cameraLocationOnRobot = OpenGLMatrix
-                .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, 90, 0));
-
-        /**  Let all the trackable listeners know where the camera is.  */
-        for (VuforiaTrackable trackable : allTrackables) {
-            ((VuforiaTrackableDefaultListener) trackable.getListener()).
-                    setCameraLocationOnRobot(parameters.cameraName, cameraLocationOnRobot);
-        }
-
-        targets.activate();
-
-
-
 
         waitForStart();
         while (!isStopRequested()) {
 
+            TelemetryData t = new TelemetryData();
+            NavFunctions.updateDt(nav);
+            NavFunctions.updateHeading(nav);
+
             // check all the trackable targets to see which one (if any) is visible.
-            targetVisible = false;
+            boolean targetVisible = false;
             for (VuforiaTrackable trackable : allTrackables) {
                 if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
                     telemetry.addData("Visible Target", trackable.getName());
@@ -129,36 +145,102 @@ public class autoScoring extends LinearOpMode {
                 }
             }
 
-            // Provide feedback as to where the robot is located (if we know).
+            boolean updated = false;
+            VectorF translation = new VectorF(0, 0, 0);
             if (targetVisible) {
-                // express position (translation) of robot in inches.
-                VectorF translation = lastLocation.getTranslation();
-                telemetry.addData("Pos (inches)", "{X, Y, Z} = %.1f, %.1f, %.1f",
-                        translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
 
-                // express the rotation of the robot in degrees.
-                Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-                telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f",
-                        rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+                updated = true;
+
+                // express position (translation) of robot in inches.
+                if(!translation.equals(lastLocation.getTranslation())){
+                    nav.timer.reset();
+                    translation = lastLocation.getTranslation();
+                    t.addChild("SAME", "");
+                }
+
+                TelemetryData pos = new TelemetryData("Pos");
+                t.addChild(pos);
+                pos.addChild("x", translation.get(0));
+                pos.addChild("y", translation.get(1));
+                pos.addChild("z", translation.get(2));
             }
             else {
-                telemetry.addData("Visible Target", "none");
+                t.addChild("Visible Target", "none");
             }
-            telemetry.update();
+
+
+
+            float PIDOut = PIDFunctions.updatePIDAngular(
+                    drivePID,
+                    nav.heading,
+                    (float)nav.dt);
+
+            if(updated){
+
+
+                VectorF pos = lastLocation.getTranslation();
+                float x = pos.get(0);
+                float y = pos.get(1);
+
+                //NTS: run starting w/ the bot facing the wall!
+                V2f rel = new V2f(x - (-1657), y - (-2116));
+                TelemetryData r = new TelemetryData("Relative");
+                r.addChild("x", rel.x);
+                r.addChild("y", rel.y);
+
+
+
+                V2f d = new V2f(rel.x / 3000.0f, rel.y / 3000.0f);
+                d = rel.rotated(-nav.heading);
+                TelemetryData dt = new TelemetryData("drkizghzdrgrdgzgzri;gzrjngrzgrzji");
+                t.addChild(dt);
+                dt.addChild("x", d.x);
+                dt.addChild("y", d.y);
+
+                /*
+                *           +Y       BL
+                *
+                *       O <- target
+                * -X                 +X
+                *
+                *
+                *  RL       -Y
+                * */
+
+                if(nav.timer.seconds() < 0.1f){
+                    // DriveFunctions.setPower(drive, rel, PIDOut);
+                }
+
+            }
+
+            DriveFunctions.setPower(drive, new V2f(0.0f, 0.0f), PIDOut);
+
+
+
+
+
+
+
+
+            TelemetryFunctions.sendTelemetry(this.telemetry, t);
         }
 
-        // Disable Tracking when we are done;
         targets.deactivate();
     }
 
-    /***
-     * Identify a target by naming it, and setting its position and orientation on the field
-     * @param targetIndex .
-     * @param targetName .
-     * @param dx, dy, dz  Target offsets in x,y,z axes
-     * @param rx, ry, rz  Target rotations in x,y,z axes
-     */
-    void identifyTarget(VuforiaTrackables targets, int targetIndex, String targetName,
+
+
+
+
+
+
+
+
+
+
+
+
+    void registerTarget(VuforiaTrackables targets, int targetIndex, String targetName,
                         float dx, float dy, float dz,
                         float rx, float ry, float rz) {
 
