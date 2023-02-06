@@ -119,6 +119,7 @@ public class autoScoring extends LinearOpMode {
 
 
 
+        float sensitivity = 2000;
 
         waitForStart();
         while (!isStopRequested()) {
@@ -183,16 +184,17 @@ public class autoScoring extends LinearOpMode {
                 float y = pos.get(1);
 
                 //NTS: run starting w/ the bot facing the wall!
-                V2f rel = new V2f(x - (-1657), y - (-2116));
+                V2f rel = new V2f(x - (-1232), y - (-1984));
                 TelemetryData r = new TelemetryData("Relative");
                 r.addChild("x", rel.x);
                 r.addChild("y", rel.y);
 
 
 
-                V2f d = new V2f(rel.x / 3000.0f, rel.y / 3000.0f);
-                d = rel.rotated(-nav.heading);
-                TelemetryData dt = new TelemetryData("drkizghzdrgrdgzgzri;gzrjngrzgrzji");
+                V2f d = new V2f(rel.x / sensitivity, rel.y / sensitivity);
+                // d = new V2f(0.1f, 0.1f);
+                d = d.rotated(-nav.heading);
+                TelemetryData dt = new TelemetryData("Drive pwr");
                 t.addChild(dt);
                 dt.addChild("x", d.x);
                 dt.addChild("y", d.y);
@@ -208,8 +210,15 @@ public class autoScoring extends LinearOpMode {
                 * */
 
                 if(nav.timer.seconds() < 0.1f){
-                    // DriveFunctions.setPower(drive, rel, PIDOut);
+                    DriveFunctions.setPower(drive, rel, PIDOut);
                 }
+                else if (nav.timer.seconds() > 1.0f){
+                    nav.timer.reset();
+                }
+
+
+                sensitivity += gamepad1.right_trigger - gamepad1.left_trigger;
+                t.addChild("divider", sensitivity);
 
             }
 

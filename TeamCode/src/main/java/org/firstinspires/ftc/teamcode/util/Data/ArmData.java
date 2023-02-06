@@ -20,7 +20,7 @@ public class ArmData {
 
     public ArmData(HardwareMap map) {
         this.liftMotor = map.get(DcMotor.class, "lift_motor");
-        //this.liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         this.liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.gripServo = map.get(Servo.class, "grip_servo");
         this.limitSwitch = map.touchSensor.get("limit_switch");
