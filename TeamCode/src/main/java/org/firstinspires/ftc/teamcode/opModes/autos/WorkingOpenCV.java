@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.functions.InitArm;
 import org.firstinspires.ftc.teamcode.util.Data.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.util.Data.ArmData;
 import org.openftc.apriltag.AprilTagDetection;
@@ -77,7 +78,7 @@ public class WorkingOpenCV extends LinearOpMode
 
         TelemetryData ci = new TelemetryData();
         telemetry.addChild(ci);
-        ci.title = "yg;uirguhlsrtguh;sgbrhj;sreguh;srge;ioj";
+        ci.title = "Arm Initialized!";
         Constants.initArm(arm, ci);
 
 
@@ -101,29 +102,10 @@ public class WorkingOpenCV extends LinearOpMode
 
         telemetry.addChild("Initialized!", "");
         TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
-        waitForStart();
+
         nav.timer.reset();
 
-
-        int zone = 0;
-
-
-
-
-
-        while (opModeIsActive()) {
-
-            /*if(foundTag != -1){
-                nav.timer.reset();
-            }*/
-            NavFunctions.updateDt(nav);
-            NavFunctions.updateHeading(nav);
-
-            float PIDOut = PIDFunctions.updatePIDAngular(
-                    drivePID,
-                    nav.heading,
-                    (float) nav.dt);
-
+        while(!isStopRequested() && foundTag == -1){
 
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
             if (foundTag == -1) {
@@ -138,67 +120,63 @@ public class WorkingOpenCV extends LinearOpMode
 
                     }
                 }
+            }
+
+            telemetry.addChild("Tag: ", foundTag);
+            TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
+        }
+        TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
 
 
-                if (foundTag != -1) {
-                    nav.timer.reset();
-                }
 
+
+
+
+        int zone = foundTag + 1;
+
+        waitForStart();
+        nav.timer.reset();
+        while (opModeIsActive()) {
+
+
+            NavFunctions.updateDt(nav);
+            NavFunctions.updateHeading(nav);
+
+            float PIDOut = PIDFunctions.updatePIDAngular(
+                    drivePID,
+                    nav.heading,
+                    (float) nav.dt);
+
+
+
+
+
+
+
+
+            //if a zone is detected, set motor pwr with current step of that zones
+            //sequence
+            Step c = SequencerFunctions.getStep(Constants.PARKING_SEQUENCES[zone], (float) nav.timer.seconds());
+
+
+            if (c.data.length == 0) {
+                telemetry.addChild("Step invalid", "");
+                DriveFunctions.setPower(
+                        drive,
+                        new V2f(0, 0),
+                        PIDOut);
             } else {
-                telemetry.addChild("Tag Found:", foundTag);
-                //telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
-                //telemetry.addChild("\nDetected tag ID=%d", foundTag);
-                TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
-                if (foundTag == 0) {
-                    telemetry.addChild("Tag Found:", foundTag);
-                    zone = 1;
-                }
-                if (foundTag == 1) {
-                    telemetry.addChild("Tag Found:", foundTag);
-                    zone = 2;
-                }
-                if (foundTag == 2) {
-                    telemetry.addChild("Tag Found:", foundTag);
-                    zone = 3;
-                }
-
-                TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
-
-                //if the zone is found this iteration, reset timer to work w/ sequencer
-
+                DriveFunctions.setPower(
+                        drive,
+                        new V2f(c.data[0], c.data[1]),
+                        PIDOut);
             }
 
-            if (zone != 0) {
-                //if a zone is detected, set motor pwr with current step of that zones
-                //sequence
 
-                Step c = SequencerFunctions.getStep(Constants.PARKING_SEQUENCES[zone], (float) nav.timer.seconds());
-
-
-                if (c.data.length == 0) {
-                    telemetry.addChild("Step invalid", "");
-                    DriveFunctions.setPower(
-                            drive,
-                            new V2f(0, 0),
-                            PIDOut);
-                } else {
-                    DriveFunctions.setPower(
-                            drive,
-                            new V2f(c.data[0], c.data[1]),
-                            PIDOut);
-                }
-            }
+            telemetry.addChild("Tag found", foundTag +1);
             telemetry.addChild("Detected zone", zone);
             telemetry.addChild("current time", nav.timer.seconds());
             TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
-
-            /*if (foundTag == 1) {
-                telemetry.addChild("Tag Found:", foundTag);
-            }
-
-            if (foundTag == 2) {
-                telemetry.addChild("Tag Found:", foundTag);
-            }*/
         }
     }
 
