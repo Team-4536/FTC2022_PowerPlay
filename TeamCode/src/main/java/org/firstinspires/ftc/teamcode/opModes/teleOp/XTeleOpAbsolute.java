@@ -27,7 +27,7 @@ public class XTeleOpAbsolute extends LinearOpMode{
         NavData nav = new NavData(this.hardwareMap);
 
         DriveData drive = new DriveData(
-                new boolean[] {true, false, true, false},
+                Constants.XFlipMap,
                 this.hardwareMap);
         PIDData drivePID = new PIDData(0.015f, 0.0f, -0.2f);
 

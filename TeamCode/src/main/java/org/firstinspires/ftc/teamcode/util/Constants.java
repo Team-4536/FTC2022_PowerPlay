@@ -59,24 +59,35 @@ public abstract class Constants {
 
 
 
+    public static final boolean[] XFlipMap = {
+            true, false, true, false
+    };
+
+
+
+
     static final float zonesPwr = 0.23f;
-    static final float hTime = 3.1f;
-    static final float vTime = 4.0f;
+    static final float hTime = 2.4f;
+    static final float vTime = 4.2f;
+    static final float outTime = 0.5f;
 
     public static Step[][] PARKING_SEQUENCES = new Step[][]{
 
             new Step[] { },
 
             new Step[]{
+                    new Step(new float[]{ 0, zonesPwr}, outTime),
                     new Step(new float[]{-zonesPwr, 0}, hTime),
                     new Step(new float[]{0, zonesPwr}, vTime)
             },
 
             new Step[]{
+                    new Step(new float[]{ 0, zonesPwr}, outTime),
                     new Step(new float[]{0, zonesPwr}, vTime),
             },
 
             new Step[]{
+                    new Step(new float[]{ 0, zonesPwr}, outTime),
                     new Step(new float[]{zonesPwr, 0}, hTime),
                     new Step(new float[]{0, zonesPwr}, vTime)
             }
