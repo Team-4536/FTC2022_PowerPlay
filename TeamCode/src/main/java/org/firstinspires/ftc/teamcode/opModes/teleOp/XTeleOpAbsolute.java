@@ -38,7 +38,7 @@ public class XTeleOpAbsolute extends LinearOpMode{
         TelemetryData c = new TelemetryData();
         telemetry.addChild(c);
         c.title = "yg;uirguhlsrtguh;sgbrhj;sreguh;srge;ioj";
-        Constants.initArm(arm, c);
+        // Constants.initArm(arm, c);
         TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
 
 

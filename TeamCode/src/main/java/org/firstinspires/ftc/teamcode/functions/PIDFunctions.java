@@ -26,6 +26,23 @@ public abstract class PIDFunctions {
         return out;
     }
 
+    public static float updatePID(PIDData d, float pos, float dt){
+
+        // calculate the error in degrees
+        float error = d.target - pos;
+
+        // rate of change of the error
+        float derivative = (error - d.prevErr) * dt;
+
+        // sum of all error over time
+        d.iSum += error * dt;
+
+        float out = (d.Kp * error) + (d.Ki * d.iSum) + (d.Kd * derivative);
+
+        d.prevErr = error;
+
+        return out;
+    }
 
 
     //                                                                      V these degree symbols are cool
