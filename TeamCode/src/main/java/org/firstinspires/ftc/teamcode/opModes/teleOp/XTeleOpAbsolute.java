@@ -142,6 +142,10 @@ public class XTeleOpAbsolute extends LinearOpMode{
                 arm.gripServo.setPosition(this.gamepad2.a ? Constants.SERVO_OPEN : Constants.SERVO_CLOSED);
                 telemetry.addChild("Servo pos", arm.gripServo.getPosition());
             }
+            telemetry.addChild("RotationsBL", drive.BLDrive.getCurrentPosition());
+            telemetry.addChild("RotationsBR", drive.BRDrive.getCurrentPosition());
+            telemetry.addChild("RotationsFL", drive.FLDrive.getCurrentPosition());
+            telemetry.addChild("RotationsFR", drive.FRDrive.getCurrentPosition());
 
             TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
         }

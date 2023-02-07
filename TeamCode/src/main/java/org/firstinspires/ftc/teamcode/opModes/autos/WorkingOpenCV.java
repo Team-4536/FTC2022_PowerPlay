@@ -66,11 +66,13 @@ public class WorkingOpenCV extends LinearOpMode
     public void runOpMode() {
         TelemetryData telemetry = new TelemetryData("State");
 
-        NavData nav = new NavData(this.hardwareMap);
 
         DriveData drive = new DriveData(
                 new boolean[]{true, false, true, false},
                 this.hardwareMap);
+
+        NavData nav = new NavData(this.hardwareMap);
+
         PIDData drivePID = new PIDData(0.018f, 0.0f, -0.2f);
 
         ArmData arm = new ArmData(hardwareMap);
@@ -128,16 +130,13 @@ public class WorkingOpenCV extends LinearOpMode
         TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
 
 
-
-
-
-
         int zone = foundTag + 1;
 
         waitForStart();
         nav.timer.reset();
         while (opModeIsActive()) {
 
+            drive.BLDrive.getCurrentPosition();
 
             NavFunctions.updateDt(nav);
             NavFunctions.updateHeading(nav);
@@ -146,13 +145,6 @@ public class WorkingOpenCV extends LinearOpMode
                     drivePID,
                     nav.heading,
                     (float) nav.dt);
-
-
-
-
-
-
-
 
             //if a zone is detected, set motor pwr with current step of that zones
             //sequence
