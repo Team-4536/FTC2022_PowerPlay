@@ -44,6 +44,8 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
 
         waitForStart();
+        NavFunctions.updateHeading(nav);
+        drivePID.target = nav.heading;
         while(opModeIsActive()){
 
 
@@ -59,50 +61,71 @@ public class XTeleOpAbsolute extends LinearOpMode{
             NavFunctions.updateDt(nav);
             NavFunctions.updateHeading(nav);
 
-
-
             TelemetryData opModeTelemetry = new TelemetryData("OpMode");
             telemetry.addChild(opModeTelemetry);
 
 
-            //change target angle with input
-            if(r.length() >= Constants.TURN_CUTOFF){
-                float mod = Constants.defaultXTurnSpeed
-                        + ((Constants.maxXTurnSpeed-Constants.defaultXTurnSpeed)*this.gamepad1.left_trigger);
-                drivePID.target = PIDFunctions.angleWrap(drivePID.target - (r.x * mod));
+
+
+
+
+
+            float PIDOut = 0;
+            {
+                //change target angle with input
+                if (r.length() >= Constants.TURN_CUTOFF) {
+                    if (!gamepad1.left_bumper) {
+
+                        float mod = Constants.defaultXTurnSpeed
+                                + ((Constants.maxXTurnSpeed - Constants.defaultXTurnSpeed) * this.gamepad1.left_trigger);
+                        drivePID.target = PIDFunctions.angleWrap(drivePID.target - (r.x * mod));
+                    } else {
+
+                        drivePID.target = PIDFunctions.angleWrap(r.getAngleDeg() - 90);
+                    }
+
+
+                }
+                PIDOut = PIDFunctions.updatePIDAngular(
+                        drivePID,
+                        nav.heading,
+                        (float) nav.dt);
+
+                opModeTelemetry.addChild(new TelemetryData("Angle", nav.heading));
+                opModeTelemetry.addChild(new TelemetryData("PID power", PIDOut));
+                opModeTelemetry.addChild(new TelemetryData("Target Angle", drivePID.target));
             }
-            opModeTelemetry.addChild(new TelemetryData("Target Angle", drivePID.target));
-
-
-
-
-            float PIDOut = PIDFunctions.updatePIDAngular(
-                    drivePID,
-                    nav.heading,
-                    (float)nav.dt);
-            opModeTelemetry.addChild(new TelemetryData("Angle", nav.heading));
-            opModeTelemetry.addChild(new TelemetryData("PID power", PIDOut));
 
 
 
 
 
-            //multiplier for drive speed.
-            float mod = Constants.defaultXDriveSpeed
-                    + ((1-Constants.defaultXDriveSpeed)*this.gamepad1.right_trigger);
-            //float mod = 1.0f;
-            telemetry.addChild("Percent", mod);
-            V2f in = new V2f(
-                    l.x * mod,
-                    l.y * mod);
-            in = in.rotated(-nav.heading);
-            opModeTelemetry.addChild(new TelemetryData("Drive", in));
 
 
-            DriveFunctions.setPower(
-                    drive,
-                    in,
-                    PIDOut);
+            {
+
+                V2f driveCmd = l;
+                V2f dpad = new V2f(
+                        (gamepad1.dpad_right?1:0) - (gamepad1.dpad_left?1:0),
+                        (gamepad1.dpad_up?1:0) - (gamepad1.dpad_down?1:0)
+                        );
+                if(dpad.length() > 0) {
+                    driveCmd = dpad;
+                }
+
+                //multiplier for drive speed.
+                float mod = Constants.defaultXDriveSpeed
+                        + ((1-Constants.defaultXDriveSpeed)*this.gamepad1.right_trigger);
+
+
+                V2f in = new V2f( driveCmd.x * mod, driveCmd.y * mod);
+                in = in.rotated(-nav.heading);
+
+                DriveFunctions.setPower(
+                        drive,
+                        in,
+                        PIDOut);
+            }
 
 
 
@@ -126,8 +149,6 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
                 float liftSpeed = 2 * -lift;
                 telemetry.addChild("Lift speed", liftSpeed);
-
-
 
 
 

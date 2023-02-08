@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opModes.demos;
 
 import androidx.annotation.NonNull;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -16,7 +17,9 @@ import org.firstinspires.ftc.teamcode.util.Data.PIDData;
 import org.firstinspires.ftc.teamcode.util.Data.TelemetryData;
 
 
+
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Arm PID Demo", group="TeleOps")
+@Disabled
 public class PIDArmDemo extends LinearOpMode {
 
     @Override

@@ -22,6 +22,7 @@
 package org.firstinspires.ftc.teamcode.opModes.autos;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -36,6 +37,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 import java.util.ArrayList;
 
 
+@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Given Open CV", group="Autos")
 public class givenExampleCodeOpenCV extends LinearOpMode
 {
