@@ -16,11 +16,12 @@ import org.firstinspires.ftc.teamcode.util.Data.PIDData;
 import org.firstinspires.ftc.teamcode.util.Data.TelemetryData;
 import org.firstinspires.ftc.teamcode.util.Step;
 import org.firstinspires.ftc.teamcode.util.V2f;
+import org.firstinspires.ftc.teamcode.util.XRobot;
 
 import java.util.List;
 //test
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="XAuto CVP Standard", group="Autos")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="X Parking Stock", group="Autos")
 public class XAutoStandardParking extends LinearOpMode {
 
 
@@ -29,14 +30,7 @@ public class XAutoStandardParking extends LinearOpMode {
     public void runOpMode() {
 
 
-        TelemetryData telemetry = new TelemetryData("State");
-
-        NavData nav = new NavData(this.hardwareMap);
-
-        DriveData drive = new DriveData(
-                new boolean[] {true, false, true, false},
-                this.hardwareMap);
-        PIDData drivePID = new PIDData(0.018f, 0.0f, -0.2f);
+        XRobot.init(this.hardwareMap, this.telemetry, true);
 
         ObjectDetectionData detector = new ObjectDetectionData(this.hardwareMap, Constants.STANDARD_SLEEVE_MODEL);
         int zone = 0;
@@ -44,19 +38,11 @@ public class XAutoStandardParking extends LinearOpMode {
 
 
 
-        telemetry.addChild("Initialized!", "");
-        TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
+        XRobot.updateSystems(this.telemetry);
         waitForStart();
-        nav.timer.reset();
         while (opModeIsActive()) {
 
-            NavFunctions.updateDt(nav);
-            NavFunctions.updateHeading(nav);
-
-            float PIDOut = PIDFunctions.updatePIDAngular(
-                    drivePID,
-                    nav.heading,
-                    (float)nav.dt);
+            XRobot.updateSystems(this.telemetry);
 
             if(zone == 0){
 
@@ -74,42 +60,19 @@ public class XAutoStandardParking extends LinearOpMode {
                             zone = 3;
                         }
 
+
+                        if(zone != 0) {
+                            XRobot.autoData.stages = Constants.parkingRoutines.get(zone -1); }
                     }
                 }
 
-                //if the zone is found this iteration, reset timer to work w/ sequencer
-                if(zone != 0){
-                    nav.timer.reset();
-                }
             }
             else
             {
-                //if a zone is detected, set motor pwr with current step of that zones
-                //sequence
-
-                Step c = SequencerFunctions.getStep(
-                        Constants.PARKING_SEQUENCES[zone],
-                        (float)nav.timer.seconds());
-
-
-                if(c.data.length == 0) {
-                    telemetry.addChild("Step invalid", "");
-                    DriveFunctions.setPower(
-                            drive,
-                            new V2f(0, 0),
-                            PIDOut);
-                }
-                else
-                {
-                    DriveFunctions.setPower(
-                            drive,
-                            new V2f(c.data[0], c.data[1]),
-                            PIDOut);
-                }
+                XRobot.autoData.run();
             }
 
-            telemetry.addChild("Detected zone", zone);
-            TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
+            XRobot.telemetry.addChild("Detected zone", zone);
         }
     }
 }

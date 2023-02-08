@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.util.Data.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.util.XRobot;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -62,34 +63,8 @@ public class OpenCVCameraDetection extends LinearOpMode
 
         @Override
         public void runOpMode() {
-                TelemetryData telemetry = new TelemetryData("State");
 
-                NavData nav = new NavData(this.hardwareMap);
-
-                DriveData drive = new DriveData(
-                        new boolean[]{true, false, true, false},
-                        this.hardwareMap);
-                PIDData drivePID = new PIDData(0.018f, 0.0f, -0.2f);
-
-
-                Step[][] autos = new Step[][]{
-
-                        new Step[]{},
-
-                        new Step[]{
-                                new Step(new float[]{-0.4f, 0f}, 2),
-                                new Step(new float[]{0, 0.4f}, 2)
-                        },
-
-                        new Step[]{
-                                new Step(new float[]{0, 0.4f}, 2),
-                        },
-
-                        new Step[]{
-                                new Step(new float[]{0.4f, 0f}, 2),
-                                new Step(new float[]{0, 0.4f}, 2)
-                        }
-                };
+                XRobot.init(this.hardwareMap, this.telemetry, true);
 
                 int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
                 camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -108,85 +83,51 @@ public class OpenCVCameraDetection extends LinearOpMode
                         }
                 });
 
-                telemetry.addChild("Initialized!", "");
-                TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
+                XRobot.telemetry.addChild("Initialized!", "");
+                XRobot.updateSystems(this.telemetry);
                 waitForStart();
-                nav.timer.reset();
 
 
 
 
+                XRobot.updateSystems(this.telemetry);
                 while (opModeIsActive()) {
 
                         if(foundTag != -1){
-                                nav.timer.reset();
+                                XRobot.nav.timer.reset();
                         }
 
-                        NavFunctions.updateDt(nav);
-                        NavFunctions.updateHeading(nav);
-
                         float PIDOut = PIDFunctions.updatePIDAngular(
-                                drivePID,
-                                nav.heading,
-                                (float) nav.dt);
+                                XRobot.drivePID,
+                                XRobot.nav.heading,
+                                (float)XRobot.nav.dt);
 
                         ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
                         if (foundTag == -1) {
-                                telemetry.addChild("length", currentDetections.size());
+                                XRobot.telemetry.addChild("length", currentDetections.size());
                                 if (currentDetections.size() != 0) {
 
                                         for (AprilTagDetection tag : currentDetections) {
                                                 foundTag = tag.id;
-                                                telemetry.addChild("Tag Found:", foundTag);
-                                                TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
                                                 break;
 
                                         }
                                 }
                         } else {
-                                telemetry.addChild("Tag Found:", foundTag);
+                                zone = foundTag + 1;
+                                XRobot.telemetry.addChild("Zone Found:", zone);
+                                XRobot.autoData.stages = Constants.parkingRoutines.get(foundTag);
+
                                 //telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
                                 //telemetry.addChild("\nDetected tag ID=%d", foundTag);
-                                TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
-                                if (foundTag == 0) {
-                                        telemetry.addChild("Tag Found:", foundTag);
-                                        zone = 1;
-                                }
-                                if (foundTag == 1) {
-                                        telemetry.addChild("Tag Found:", foundTag);
-                                        zone = 2;
-                                }
-                                if (foundTag == 2) {
-                                        telemetry.addChild("Tag Found:", foundTag);
-                                        zone = 3;
-                                }
-
-                                TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
                         }
 
 
                 }
                 if(zone != 0){
-                        //if a zone is detected, set motor pwr with current step of that zones
-                        //sequence
 
-                        Step c = SequencerFunctions.getStep(Constants.PARKING_SEQUENCES[zone], (float)nav.timer.seconds());
-
-
-                        /*if(c.data.length == 0) {
-                                telemetry.addChild("Step invalid", "");
-                                DriveFunctions.setPower(
-                                        drive,
-                                        new V2f(0, 0),
-                                        PIDOut);
-                        }
-                        else
-                        {
-                                DriveFunctions.setPower(
-                                        drive,
-                                        new V2f(c.data[0], c.data[1]),
-                                        PIDOut);
-                        }*/
+                        XRobot.telemetry.addChild("Zone Found:", zone);
+                        XRobot.autoData.run();
                 }
 
                 /*
@@ -195,6 +136,7 @@ public class OpenCVCameraDetection extends LinearOpMode
                  */
 
                 /* Update the telemetry */
+                XRobot.updateSystems(this.telemetry);
 
 
 

@@ -1,7 +1,12 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import com.sun.tools.javac.util.List;
+
 import org.firstinspires.ftc.teamcode.util.Data.ArmData;
 import org.firstinspires.ftc.teamcode.util.Data.TelemetryData;
+
+import java.util.ArrayList;
+
 
 public abstract class Constants {
 
@@ -18,6 +23,7 @@ public abstract class Constants {
     // These are for nav,
     // offset of the camera lens from the center of the bot
     // in MM
+    // all bullshit btw
     final float CAMERA_FORWARD      = 0.0f * MM_PER_INCH;
     final float CAMERA              = 6.0f * MM_PER_INCH;
     final float CAMERA_LEFT         = 0.0f * MM_PER_INCH;
@@ -46,22 +52,52 @@ public abstract class Constants {
     );
 
 
+
+
+
+
+
+
+
+
     public static final float TURN_CUTOFF = 0.5f;
 
     public static final float defaultXDriveSpeed = 0.25f;
     public static final float defaultXTurnSpeed = 1.0f;
     public static final float maxXTurnSpeed = 3.0f;
 
+    public static final boolean[] XFlipMap = {
+            true, false, true, false
+    };
+
+
+    public static final float SERVO_CLOSED = 0.55f;
+    public static final float SERVO_OPEN =1.0f;
+
+    public static void initArm(ArmData a){
+
+        a.gripServo.setPosition(SERVO_CLOSED);
+        while(!a.limitSwitch.isPressed()){
+            a.liftMotor.setPower(-0.5f);
+        }
+
+        a.basePos = a.liftMotor.getCurrentPosition();
+        a.liftMotor.setPower(0.0f);
+    }
+
+
+
+
+
+
+
+
+
 
     public static final float mechStrafeMod = 0.9f;
     public static final float mechDriveMod = 0.6f;
 
 
-
-
-    public static final boolean[] XFlipMap = {
-            true, false, true, false
-    };
 
 
 
@@ -71,42 +107,29 @@ public abstract class Constants {
     static final float vTime = 4.2f;
     static final float outTime = 0.5f;
 
-    public static Step[][] PARKING_SEQUENCES = new Step[][]{
-
-            new Step[] { },
-
-            new Step[]{
-                    new Step(new float[]{ 0, zonesPwr}, outTime),
-                    new Step(new float[]{-zonesPwr, 0}, hTime),
-                    new Step(new float[]{0, zonesPwr}, vTime)
-            },
-
-            new Step[]{
-                    new Step(new float[]{ 0, zonesPwr}, outTime),
-                    new Step(new float[]{0, zonesPwr}, vTime),
-            },
-
-            new Step[]{
-                    new Step(new float[]{ 0, zonesPwr}, outTime),
-                    new Step(new float[]{zonesPwr, 0}, hTime),
-                    new Step(new float[]{0, zonesPwr}, vTime)
-            }
-    };
+    public static List<List<Stage>> parkingRoutines = List.of(
 
 
-    public static final float SERVO_CLOSED = 0.0f;
-    public static final float SERVO_OPEN =1.0f;
+            List.of(
+                new Stage.MoveTimed(new V2f(0, zonesPwr), outTime),
+                new Stage.MoveTimed(new V2f(-zonesPwr, 0), hTime),
+                new Stage.MoveTimed(new V2f(0, zonesPwr), vTime)
+            ),
 
-    public static void initArm(ArmData a, TelemetryData d){
+            List.of(
+                    new Stage.MoveTimed(new V2f(0, zonesPwr), outTime),
+                    new Stage.MoveTimed(new V2f(0, zonesPwr), vTime)
+            ),
 
-        d.info = String.valueOf(a.gripServo.getPosition());
-        a.gripServo.setPosition(SERVO_CLOSED);
-        while(!a.limitSwitch.isPressed()){
-            a.liftMotor.setPower(-0.5f);
-        }
+            List.of(
+                    new Stage.MoveTimed(new V2f(0, zonesPwr), outTime),
+                    new Stage.MoveTimed(new V2f(zonesPwr, 0), hTime),
+                    new Stage.MoveTimed(new V2f(0, zonesPwr), vTime)
+            )
+    );
 
-        a.basePos = a.liftMotor.getCurrentPosition();
-        a.liftMotor.setPower(0.0f);
-    }
+
+
+
 }
 
