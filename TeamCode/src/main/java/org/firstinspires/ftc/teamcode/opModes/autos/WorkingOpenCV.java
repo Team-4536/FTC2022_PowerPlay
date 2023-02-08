@@ -28,7 +28,7 @@ import org.firstinspires.ftc.teamcode.util.Data.PIDData;
 import org.firstinspires.ftc.teamcode.util.Data.TelemetryData;
 import org.firstinspires.ftc.teamcode.util.Step;
 import org.firstinspires.ftc.teamcode.util.V2f;
-
+import org.firstinspires.ftc.teamcode.util.Data.EncoderOdometry;
 
 import java.util.ArrayList;
 
@@ -77,6 +77,7 @@ public class WorkingOpenCV extends LinearOpMode
 
         ArmData arm = new ArmData(hardwareMap);
 
+        EncoderOdometry robotOdom = new EncoderOdometry(drive);
 
         TelemetryData ci = new TelemetryData();
         telemetry.addChild(ci);
@@ -132,6 +133,9 @@ public class WorkingOpenCV extends LinearOpMode
 
         int zone = foundTag + 1;
 
+        Step c = SequencerFunctions.getTickStep(Constants.PARKING_SEQUENCES_TICKS[zone], robotOdom, drive);
+        //Step c = SequencerFunctions.getStep(Constants.PARKING_SEQUENCES[zone], (float) nav.timer.seconds());
+
         waitForStart();
         nav.timer.reset();
         while (opModeIsActive()) {
@@ -148,8 +152,10 @@ public class WorkingOpenCV extends LinearOpMode
 
             //if a zone is detected, set motor pwr with current step of that zones
             //sequence
-            Step c = SequencerFunctions.getStep(Constants.PARKING_SEQUENCES[zone], (float) nav.timer.seconds());
 
+
+
+            robotOdom.EncoderReset(drive);
 
             if (c.data.length == 0) {
                 telemetry.addChild("Step invalid", "");
@@ -164,7 +170,7 @@ public class WorkingOpenCV extends LinearOpMode
                         PIDOut);
             }
 
-
+            telemetry.addChild("Distance", robotOdom.findDistance(drive));
             telemetry.addChild("Tag found", foundTag +1);
             telemetry.addChild("Detected zone", zone);
             telemetry.addChild("current time", nav.timer.seconds());

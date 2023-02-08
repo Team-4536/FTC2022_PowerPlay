@@ -7,7 +7,7 @@ public class EncoderOdometry {
     int startingRotationFL;
     int startingRotationFR;
 
-    double mmPerTick = 0; //-------
+    double mmPerTick = 1.02825; //about
 
     public EncoderOdometry(DriveData drive) {
         EncoderReset(drive);

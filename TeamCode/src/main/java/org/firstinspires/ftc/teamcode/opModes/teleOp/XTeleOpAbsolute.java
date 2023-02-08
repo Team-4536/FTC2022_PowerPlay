@@ -129,7 +129,8 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
 
 
-
+                // START   7726  27775  15496  18985
+                // ENd     8714  28886  16557  19938
 
                 arm.liftMotor.setPower(liftSpeed);
                 telemetry.addChild("Lift pos", pos);
