@@ -58,22 +58,11 @@ public class autoScoring extends LinearOpMode {
         PIDData drivePID = new PIDData(0.015f, 0.0f, -0.2f);
         drivePID.target=90;
 
+        V2f target = new V2f(-1232, -1984);
 
 
 
-
-
-
-
-
-
-        // forward from center
-        //final float CAMERA_FORWARD_DISPLACEMENT  = 0.0f * Constants.MM_PER_INCH;
-        // distance up
-        //final float CAMERA_VERTICAL_DISPLACEMENT = 6.0f * Constants.MM_PER_INCH;
-        //final float CAMERA_LEFT_DISPLACEMENT     = 0.0f * Constants.MM_PER_INCH;
-
-
+        // note the 0 translation
         OpenGLMatrix cameraLocationOnRobot = OpenGLMatrix
                 .translation(0, 0, 0)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, 90, 0));
@@ -90,20 +79,14 @@ public class autoScoring extends LinearOpMode {
         //=====================================================================================
         VuforiaTrackables targets = vuforia.loadTrackablesFromAsset("PowerPlay");
         List<VuforiaTrackable> allTrackables = new ArrayList<>(targets);
-
         registerTarget(targets, 0, "Red Left",
                 -Constants.HALF_FIELD_MM,  -(Constants.HALF_FIELD_MM + Constants.HALF_TILE_MM), Constants.IMG_HEIGHT_MM, 90, 0,  90);
-
         registerTarget(targets, 1, "Red Right",
                 Constants.HALF_FIELD_MM,  -(Constants.HALF_FIELD_MM + Constants.HALF_TILE_MM), Constants.IMG_HEIGHT_MM, 90, 0, -90);
-
         registerTarget(targets, 2, "Blue Right",
                 -Constants.HALF_FIELD_MM, (Constants.HALF_FIELD_MM + Constants.HALF_TILE_MM), Constants.IMG_HEIGHT_MM, 90, 0,  90);
-
         registerTarget(targets, 3, "Blue Left",
                 Constants.HALF_FIELD_MM, (Constants.HALF_FIELD_MM + Constants.HALF_TILE_MM), Constants.IMG_HEIGHT_MM, 90, 0, -90);
-
-
 
 
         for (VuforiaTrackable trackable : allTrackables) {
@@ -119,8 +102,7 @@ public class autoScoring extends LinearOpMode {
 
 
 
-
-        float sensitivity = 2000;
+        double timeStash = 0;
 
         waitForStart();
         while (!isStopRequested()) {
@@ -129,46 +111,38 @@ public class autoScoring extends LinearOpMode {
             NavFunctions.updateDt(nav);
             NavFunctions.updateHeading(nav);
 
+
+
+
             // check all the trackable targets to see which one (if any) is visible.
             boolean targetVisible = false;
+            boolean newData = false;
             for (VuforiaTrackable trackable : allTrackables) {
                 if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
                     telemetry.addData("Visible Target", trackable.getName());
                     targetVisible = true;
 
-                    // getUpdatedRobotLocation() will return null if no new information is available since
-                    // the last time that call was made, or if the trackable is not currently visible.
                     OpenGLMatrix robotLocationTransform =
                             ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+
                     if (robotLocationTransform != null) {
                         lastLocation = robotLocationTransform;
+                        newData = true;
+                        timeStash = nav.timer.seconds();
                     }
+
                     break;
                 }
             }
 
-            boolean updated = false;
-            VectorF translation = new VectorF(0, 0, 0);
-            if (targetVisible) {
 
-                updated = true;
 
-                // express position (translation) of robot in inches.
-                if(!translation.equals(lastLocation.getTranslation())){
-                    nav.timer.reset();
-                    translation = lastLocation.getTranslation();
-                    t.addChild("SAME", "");
-                }
 
-                TelemetryData pos = new TelemetryData("Pos");
-                t.addChild(pos);
-                pos.addChild("x", translation.get(0));
-                pos.addChild("y", translation.get(1));
-                pos.addChild("z", translation.get(2));
-            }
-            else {
-                t.addChild("Visible Target", "none");
-            }
+
+
+
+
+
 
 
 
@@ -177,59 +151,47 @@ public class autoScoring extends LinearOpMode {
                     nav.heading,
                     (float)nav.dt);
 
-            if(updated){
+
+
+
+            if (targetVisible) {
 
 
                 VectorF pos = lastLocation.getTranslation();
-                float x = pos.get(0);
-                float y = pos.get(1);
-
-                V2f rel = new V2f(x - (-1232), y - (-1984));
-                TelemetryData r = new TelemetryData("Relative");
-                r.addChild("x", rel.x);
-                r.addChild("y", rel.y);
+                V2f rel = new V2f(pos.get(0) - target.x, pos.get(1) - target.y);
 
 
+                t.addChild(new TelemetryData("Relative", rel));
+                t.addChild(new TelemetryData("Actual Pos", new V2f(pos.get(0), pos.get(1))));
+                t.addChild(new TelemetryData("Target", target));
 
-                V2f d = new V2f(rel.x / sensitivity, rel.y / sensitivity);
-                // d = new V2f(0.1f, 0.1f);
-                d = d.rotated(-nav.heading);
-                TelemetryData dt = new TelemetryData("Drive pwr");
-                t.addChild(dt);
-                dt.addChild("x", d.x);
-                dt.addChild("y", d.y);
 
-                /*
-                *           +Y       BL
-                *
-                *       O <- target
-                * -X                 +X
-                *
-                *
-                *  RL       -Y
-                * */
 
-                if(nav.timer.seconds() < 0.1f){
-                    DriveFunctions.setPower(drive, rel, PIDOut);
-                }
-                else if (nav.timer.seconds() > 1.0f){
-                    nav.timer.reset();
+                rel = rel.normalized();
+
+                if(timeStash - nav.timer.seconds() < 0.5f) {
+
+                    DriveFunctions.setPower(drive, rel.multiply(0.2f), PIDOut);
                 }
 
-
-                sensitivity += gamepad1.right_trigger - gamepad1.left_trigger;
-                t.addChild("divider", sensitivity);
 
             }
-
-            DriveFunctions.setPower(drive, new V2f(0.0f, 0.0f), PIDOut);
-
-
-
-
+            else {
+                t.addChild("Visible Target", "none");
+                DriveFunctions.setPower(drive, new V2f(0.0f, 0.0f), PIDOut);
+            }
 
 
-
+            // ??????????????????????????????????????
+            /*
+            *           +Y       BL
+            *
+            *       O <- target
+            * -X                 +X
+            *
+            *
+            *  RL       -Y
+            * */
 
             TelemetryFunctions.sendTelemetry(this.telemetry, t);
         }

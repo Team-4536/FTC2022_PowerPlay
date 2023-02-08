@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.util;
 
 import org.firstinspires.ftc.teamcode.functions.DriveFunctions;
 import org.firstinspires.ftc.teamcode.functions.PIDFunctions;
+import org.firstinspires.ftc.teamcode.util.Data.PIDData;
 
 public abstract class Stage {
 
@@ -44,6 +45,22 @@ public abstract class Stage {
                     PIDOut);
 
             return this.duration < (XRobot.nav.timer.seconds() - startTime);
+        }
+    }
+
+
+
+    public static class MoveByEncoders extends Stage {
+
+    }
+
+    public static class CenterOnImage extends Stage {
+
+        PIDData xpid = new PIDData(0.1f, 0.0f, 0.0f);
+        PIDData ypid = new PIDData(xpid.Kp, xpid.Ki, xpid.Kd);
+
+        public CenterOnImage(int id, V2f pos) {
+
         }
     }
 }

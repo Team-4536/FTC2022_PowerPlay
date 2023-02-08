@@ -23,6 +23,10 @@ public class TelemetryData{
 
     public TelemetryData() { }
     public TelemetryData(@NonNull String _name) { this.title = _name; }
+    public TelemetryData(@NonNull String _name, @NonNull TelemetryData parent) {
+        this.title = _name;
+        parent.addChild(this);
+    }
     public TelemetryData(@NonNull String _name, @NonNull String _info) {
         this.title = _name;
         this.info = _info;
@@ -41,7 +45,8 @@ public class TelemetryData{
     }
     public TelemetryData(@NonNull String _name, V2f _info){
         this.title = _name;
-        this.info = _info.x + ", " + _info.y;
+        this.addChild("X", _info.x);
+        this.addChild("Y", _info.y);
     }
 
 
