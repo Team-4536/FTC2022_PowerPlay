@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opModes.autos;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 
 @Autonomous(name="OpenCV and Feild", group="Autos")
 
+@Disabled
 public class OpenCVWithImages extends LinearOpMode
 {
     OpenCvCamera camera;

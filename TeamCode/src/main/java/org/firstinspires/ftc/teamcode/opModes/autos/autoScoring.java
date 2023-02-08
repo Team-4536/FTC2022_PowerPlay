@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XZY;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -33,7 +34,7 @@ import org.firstinspires.ftc.teamcode.util.V2f;
 import java.util.ArrayList;
 import java.util.List;
 
-@TeleOp(name="XAutoScoring", group ="Autos")
+@Autonomous(name="XAutoScoring")
 public class autoScoring extends LinearOpMode {
 
 
@@ -183,7 +184,6 @@ public class autoScoring extends LinearOpMode {
                 float x = pos.get(0);
                 float y = pos.get(1);
 
-                //NTS: run starting w/ the bot facing the wall!
                 V2f rel = new V2f(x - (-1232), y - (-1984));
                 TelemetryData r = new TelemetryData("Relative");
                 r.addChild("x", rel.x);

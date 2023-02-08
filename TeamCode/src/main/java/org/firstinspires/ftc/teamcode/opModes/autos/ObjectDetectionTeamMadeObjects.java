@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opModes.autos;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.teamcode.util.V2f;
 import java.util.List;
 
 
+@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="MechAuto CV Parking Custom", group="Autos")
 public class ObjectDetectionTeamMadeObjects extends LinearOpMode {
 
