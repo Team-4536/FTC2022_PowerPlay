@@ -100,6 +100,7 @@ public class ConceptVuforiaNavigation {
      * is explained below.
      */
 
+    @Disabled
     @TeleOp(name="Vuforia Field Nav Webcam", group ="Concept")
     public class ConceptVuforiaFieldNavigationWebcam extends LinearOpMode {
 
@@ -123,7 +124,6 @@ public class ConceptVuforiaNavigation {
 
             // VUFORIA INIT
             // Same code as object detector, besides camMonitor, plz look into more
-
             int cameraMonitorViewId = hardwareMap.appContext.getResources()
                     .getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
             VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
