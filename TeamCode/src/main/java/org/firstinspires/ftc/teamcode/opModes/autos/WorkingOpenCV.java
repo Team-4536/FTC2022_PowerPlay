@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.util.Data.PIDData;
 import org.firstinspires.ftc.teamcode.util.Data.TelemetryData;
 import org.firstinspires.ftc.teamcode.util.Step;
 import org.firstinspires.ftc.teamcode.util.V2f;
-
+import org.firstinspires.ftc.teamcode.util.Data.EncoderOdometry;
 
 import java.util.ArrayList;
 
@@ -61,6 +61,10 @@ public class WorkingOpenCV extends LinearOpMode
 
     @Override
     public void runOpMode() {
+
+        EncoderOdometry robotOdom = new EncoderOdometry(drive);
+
+        
 
         XRobot.init(this.hardwareMap, this.telemetry, true);
 
@@ -107,6 +111,7 @@ public class WorkingOpenCV extends LinearOpMode
 
 
 
+
         if(foundTag != -1) {
             XRobot.telemetry.addChild("Tag Found: ", foundTag); }
         else { XRobot.telemetry.addChild("No tag identified", ""); }
@@ -125,11 +130,17 @@ public class WorkingOpenCV extends LinearOpMode
         XRobot.updateSystems(this.telemetry);
         while (opModeIsActive()) {
 
+
             XRobot.telemetry.addChild("current time", XRobot.nav.timer.seconds());
 
             XRobot.autoData.run();
 
             XRobot.updateSystems(this.telemetry);
+
+
+            robotOdom.EncoderReset(drive);
+
+            
         }
     }
 

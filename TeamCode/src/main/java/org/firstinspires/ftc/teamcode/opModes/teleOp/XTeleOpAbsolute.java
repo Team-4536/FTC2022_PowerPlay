@@ -114,6 +114,7 @@ public class XTeleOpAbsolute extends LinearOpMode{
                 XRobot.arm.liftMotor.setPower(liftSpeed);
                 XRobot.telemetry.addChild("Lift speed", liftSpeed);
                 XRobot.telemetry.addChild("Arm Difference", armDifference);
+
             }
 
             //servo
@@ -121,6 +122,10 @@ public class XTeleOpAbsolute extends LinearOpMode{
                 XRobot.arm.gripServo.setPosition(this.gamepad2.a ? Constants.SERVO_OPEN : Constants.SERVO_CLOSED);
                 XRobot.telemetry.addChild("Servo pos", XRobot.arm.gripServo.getPosition());
             }
+            telemetry.addChild("RotationsBL", drive.BLDrive.getCurrentPosition());
+            telemetry.addChild("RotationsBR", drive.BRDrive.getCurrentPosition());
+            telemetry.addChild("RotationsFL", drive.FLDrive.getCurrentPosition());
+            telemetry.addChild("RotationsFR", drive.FRDrive.getCurrentPosition());
 
             XRobot.updateSystems(this.telemetry);
         }

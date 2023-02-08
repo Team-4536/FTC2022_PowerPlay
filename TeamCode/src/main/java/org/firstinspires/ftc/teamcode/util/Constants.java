@@ -106,8 +106,14 @@ public abstract class Constants {
     static final float hTime = 2.4f;
     static final float vTime = 4.2f;
     static final float outTime = 0.5f;
+    
+    static final float hmm = 60f;
+    static final float vmm = 70f;
+    static final float outmm = 20f;
+
 
     public static List<List<Stage>> parkingRoutines = List.of(
+
 
 
             List.of(
@@ -127,6 +133,28 @@ public abstract class Constants {
                     new Stage.MoveTimed(new V2f(0, zonesPwr), vTime)
             )
     );
+
+    public static Step[][] PARKING_SEQUENCES_TICKS = new Step[][]{
+
+            new Step[] { },
+
+            new Step[]{
+                    new Step(new float[]{ 0, zonesPwr}, outmm),
+                    new Step(new float[]{-zonesPwr, 0}, hmm),
+                    new Step(new float[]{0, zonesPwr}, vmm)
+            },
+
+            new Step[]{
+                    new Step(new float[]{ 0, zonesPwr}, outmm),
+                    new Step(new float[]{0, zonesPwr}, vmm),
+            },
+
+            new Step[]{
+                    new Step(new float[]{ 0, zonesPwr}, outmm),
+                    new Step(new float[]{zonesPwr, 0}, hmm),
+                    new Step(new float[]{0, zonesPwr}, vmm)
+            }
+    };
 
 
 
