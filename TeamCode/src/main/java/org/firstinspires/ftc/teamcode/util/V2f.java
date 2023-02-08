@@ -31,6 +31,9 @@ public class V2f {
     }
 
 
+    public V2f add(V2f s) {
+        return new V2f(this.x + s.x, this.y + s.y); }
+
     public V2f divide(float s) {
         return new V2f(this.x / s, this.y / s); }
 
