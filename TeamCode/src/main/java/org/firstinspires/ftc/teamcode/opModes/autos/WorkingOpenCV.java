@@ -127,8 +127,8 @@ public class WorkingOpenCV extends LinearOpMode
 
         waitForStart();
 
-        // XRobot.autoData.stages = Constants.parkingRoutines.get(foundTag);
-        XRobot.autoData.stages = Constants.getParkingRoutinesTicks(robotOdom).get(foundTag);
+        XRobot.autoData.stages = Constants.parkingRoutines.get(foundTag);
+        //XRobot.autoData.stages = Constants.getParkingRoutinesTicks(robotOdom).get(foundTag);
 
         XRobot.updateSystems(this.telemetry);
         while (opModeIsActive()) {
