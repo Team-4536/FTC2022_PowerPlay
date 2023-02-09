@@ -6,6 +6,8 @@ import org.firstinspires.ftc.teamcode.functions.PIDFunctions;
 import org.firstinspires.ftc.teamcode.util.Data.NavImageDetectionPipeline;
 import org.firstinspires.ftc.teamcode.util.Data.PIDData;
 import org.firstinspires.ftc.teamcode.util.Data.TelemetryData;
+import org.firstinspires.ftc.teamcode.util.Data.EncoderOdometry;
+import org.firstinspires.ftc.teamcode.util.XRobot;
 
 public abstract class Stage {
 
@@ -67,7 +69,38 @@ public abstract class Stage {
 
 
     public static class MoveByEncoders extends Stage {
+        double requiredmm;
+        V2f dir;
+        EncoderOdometry robotOdom;
 
+
+        public MoveByEncoders(V2f dir, double requiredmm, EncoderOdometry robotOdom) {
+            this.dir = dir;
+            this.requiredmm = requiredmm;
+            this.robotOdom = robotOdom;
+        }
+
+        @Override
+        public boolean run(){
+            float PIDOut = PIDFunctions.updatePIDAngular(
+                    XRobot.drivePID,
+                    XRobot.nav.heading,
+                    (float)XRobot.nav.dt
+            );
+
+            DriveFunctions.setPower(
+                    XRobot.drive,
+                    this.dir,
+                    PIDOut);
+
+            if(robotOdom.findDistance(XRobot.drive) >= requiredmm){
+                return true;
+            }
+            else{
+                return false;
+            }
+
+        }
     }
 
     public static class CenterOnImage extends Stage {

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.util;
 import com.sun.tools.javac.util.List;
 
 import org.firstinspires.ftc.teamcode.util.Data.ArmData;
+import org.firstinspires.ftc.teamcode.util.Data.EncoderOdometry;
 import org.firstinspires.ftc.teamcode.util.Data.TelemetryData;
 
 import java.util.ArrayList;
@@ -137,26 +138,27 @@ public abstract class Constants {
             )
     );
 
-    public static Step[][] PARKING_SEQUENCES_TICKS = new Step[][]{
+    public static List<List<Stage>> getParkingRoutinesTicks(EncoderOdometry e) {
 
-            new Step[] { },
+        return List.of(
 
-            new Step[]{
-                    new Step(new float[]{ 0, zonesPwr}, outmm),
-                    new Step(new float[]{-zonesPwr, 0}, hmm),
-                    new Step(new float[]{0, zonesPwr}, vmm)
-            },
+            List.of(
+                    new Stage.MoveByEncoders(new V2f(0, zonesPwr), outmm, e),
+                    new Stage.MoveByEncoders(new V2f(-zonesPwr, 0), hmm, e),
+                    new Stage.MoveByEncoders(new V2f(0, zonesPwr), vmm, e)
+            ),
 
-            new Step[]{
-                    new Step(new float[]{ 0, zonesPwr}, outmm),
-                    new Step(new float[]{0, zonesPwr}, vmm),
-            },
+            List.of(
+                    new Stage.MoveByEncoders(new V2f(0, zonesPwr), outmm, e),
+                    new Stage.MoveByEncoders(new V2f(0, zonesPwr), vmm, e)
+            ),
 
-            new Step[]{
-                    new Step(new float[]{ 0, zonesPwr}, outmm),
-                    new Step(new float[]{zonesPwr, 0}, hmm),
-                    new Step(new float[]{0, zonesPwr}, vmm)
-            }
+            List.of(
+                    new Stage.MoveByEncoders(new V2f(0, zonesPwr), outmm, e),
+                    new Stage.MoveByEncoders(new V2f(zonesPwr, 0), hmm, e),
+                    new Stage.MoveByEncoders(new V2f(0, zonesPwr), vmm, e)
+            )
+        );
     };
 
 

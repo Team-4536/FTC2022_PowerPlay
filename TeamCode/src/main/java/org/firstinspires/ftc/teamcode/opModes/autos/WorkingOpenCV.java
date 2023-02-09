@@ -62,12 +62,13 @@ public class WorkingOpenCV extends LinearOpMode
     @Override
     public void runOpMode() {
 
-        EncoderOdometry robotOdom = new EncoderOdometry(drive);
+
 
 
 
         XRobot.init(this.hardwareMap, this.telemetry, true);
 
+        EncoderOdometry robotOdom = new EncoderOdometry(XRobot.drive);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -126,11 +127,12 @@ public class WorkingOpenCV extends LinearOpMode
 
         waitForStart();
 
-        XRobot.autoData.stages = Constants.parkingRoutines.get(foundTag);
+        // XRobot.autoData.stages = Constants.parkingRoutines.get(foundTag);
+        XRobot.autoData.stages = Constants.getParkingRoutinesTicks(robotOdom).get(foundTag);
 
         XRobot.updateSystems(this.telemetry);
         while (opModeIsActive()) {
-
+            robotOdom.EncoderReset(XRobot.drive);
             XRobot.telemetry.addChild("current time", XRobot.nav.timer.seconds());
 
             XRobot.autoData.run();
@@ -138,6 +140,7 @@ public class WorkingOpenCV extends LinearOpMode
             if(foundTag != -1) {
                 XRobot.telemetry.addChild("Tag Found: ", foundTag); }
             else { XRobot.telemetry.addChild("No tag identified", ""); }
+
 
             XRobot.updateSystems(this.telemetry);
         }
