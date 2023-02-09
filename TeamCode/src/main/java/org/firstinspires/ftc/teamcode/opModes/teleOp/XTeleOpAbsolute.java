@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.util.Data.NavData;
 import org.firstinspires.ftc.teamcode.util.Data.PIDData;
 import org.firstinspires.ftc.teamcode.util.Data.TelemetryData;
 import org.firstinspires.ftc.teamcode.util.V2f;
+import org.firstinspires.ftc.teamcode.util.XRobot;
 
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="X teleOp abs", group="TeleOps")
@@ -21,31 +22,14 @@ public class XTeleOpAbsolute extends LinearOpMode{
     @Override
     public void runOpMode() {
 
-
-        TelemetryData telemetry = new TelemetryData("State");
-
-        NavData nav = new NavData(this.hardwareMap);
-
-        DriveData drive = new DriveData(
-                Constants.XFlipMap,
-                this.hardwareMap);
-        PIDData drivePID = new PIDData(0.015f, 0.0f, -0.2f);
-
-        ArmData arm = new ArmData(this.hardwareMap);
-
-
-
-        TelemetryData c = new TelemetryData();
-        telemetry.addChild(c);
-        c.title = "yg;uirguhlsrtguh;sgbrhj;sreguh;srge;ioj";
-        Constants.initArm(arm, c);
-        TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
-
-
+        XRobot.init(this.hardwareMap, this.telemetry, false);
 
         waitForStart();
-        while(opModeIsActive()){
 
+        XRobot.drivePID.target = XRobot.nav.heading;
+        XRobot.updateSystems(this.telemetry);
+
+        while(opModeIsActive()){
 
 
             V2f l = new V2f(
@@ -56,68 +40,68 @@ public class XTeleOpAbsolute extends LinearOpMode{
                     -this.gamepad1.right_stick_y);
 
 
-            NavFunctions.updateDt(nav);
-            NavFunctions.updateHeading(nav);
 
 
-
-            TelemetryData opModeTelemetry = new TelemetryData("OpMode");
-            telemetry.addChild(opModeTelemetry);
-
-
-            //change target angle with input
-            if(r.length() >= Constants.TURN_CUTOFF){
-                float mod = Constants.defaultXTurnSpeed
-                        + ((Constants.maxXTurnSpeed-Constants.defaultXTurnSpeed)*this.gamepad1.left_trigger);
-                drivePID.target = PIDFunctions.angleWrap(drivePID.target - (r.x * mod));
-            }
-            opModeTelemetry.addChild(new TelemetryData("Target Angle", drivePID.target));
-
-
-
-
-            float PIDOut = PIDFunctions.updatePIDAngular(
-                    drivePID,
-                    nav.heading,
-                    (float)nav.dt);
-            opModeTelemetry.addChild(new TelemetryData("Angle", nav.heading));
-            opModeTelemetry.addChild(new TelemetryData("PID power", PIDOut));
-
-
-
-
-
-            //multiplier for drive speed.
-            float mod = Constants.defaultXDriveSpeed
-                    + ((1-Constants.defaultXDriveSpeed)*this.gamepad1.right_trigger);
-            //float mod = 1.0f;
-            telemetry.addChild("Percent", mod);
-            V2f in = new V2f(
-                    l.x * mod,
-                    l.y * mod);
-            in = in.rotated(-nav.heading);
-            opModeTelemetry.addChild(new TelemetryData("Drive", in));
-
-
-            DriveFunctions.setPower(
-                    drive,
-                    in,
-                    PIDOut);
-
-
-
-
+            // angles
+            float PIDOut = 0;
             {
-                int pos = arm.liftMotor.getCurrentPosition();
-                int armDifference = arm.liftMotor.getCurrentPosition() - arm.basePos;
+                //change target angle with input
+                if (r.length() >= Constants.TURN_CUTOFF) {
+                    if (!gamepad1.left_bumper) {
+
+                        float mod = Constants.defaultXTurnSpeed
+                                + ((Constants.maxXTurnSpeed - Constants.defaultXTurnSpeed) * this.gamepad1.left_trigger);
+                        XRobot.drivePID.target = PIDFunctions.angleWrap(XRobot.drivePID.target - (r.x * mod));
+                    } else {
+
+                        XRobot.drivePID.target = PIDFunctions.angleWrap(r.getAngleDeg() - 90);
+                    }
 
 
+                }
+                PIDOut = PIDFunctions.updatePIDAngular(
+                        XRobot.drivePID,
+                        XRobot.nav.heading,
+                        (float) XRobot.nav.dt);
+
+                XRobot.telemetry.addChild("PID power", PIDOut);
+            }
+
+            // drive
+            {
+
+                V2f driveCmd = l;
+                V2f dpad = new V2f(
+                        (gamepad1.dpad_right?1:0) - (gamepad1.dpad_left?1:0),
+                        (gamepad1.dpad_up?1:0) - (gamepad1.dpad_down?1:0)
+                        );
+                if(dpad.length() > 0) {
+                    driveCmd = dpad;
+                }
+
+                //multiplier for drive speed.
+                float mod = Constants.defaultXDriveSpeed
+                        + ((1-Constants.defaultXDriveSpeed)*this.gamepad1.right_trigger);
+
+
+                V2f in = new V2f( driveCmd.x * mod, driveCmd.y * mod);
+                in = in.rotated(-XRobot.nav.heading);
+
+                DriveFunctions.setPower(
+                        XRobot.drive,
+                        in,
+                        PIDOut);
+            }
+
+            //lift
+            {
+                int armDifference = XRobot.arm.liftMotor.getCurrentPosition() - XRobot.arm.basePos;
                 float lift = this.gamepad2.left_stick_y;
 
 
-                if(arm.limitSwitch.isPressed()){
+                if(XRobot.arm.limitSwitch.isPressed()){
                     lift = (lift > 0)? 0:lift; //clamps from going lower than b
-                    arm.basePos = arm.liftMotor.getCurrentPosition();
+                    XRobot.arm.basePos = XRobot.arm.liftMotor.getCurrentPosition();
                 }
 
                 if(armDifference > 12000){
@@ -125,30 +109,25 @@ public class XTeleOpAbsolute extends LinearOpMode{
                 }
 
                 float liftSpeed = 2 * -lift;
-                telemetry.addChild("Lift speed", liftSpeed);
 
 
+                XRobot.arm.liftMotor.setPower(liftSpeed);
+                XRobot.telemetry.addChild("Lift speed", liftSpeed);
+                XRobot.telemetry.addChild("Arm Difference", armDifference);
 
-                // START   7726  27775  15496  18985
-                // ENd     8714  28886  16557  19938
-
-                arm.liftMotor.setPower(liftSpeed);
-                telemetry.addChild("Lift pos", pos);
-                telemetry.addChild("Lift speed", liftSpeed);
-                telemetry.addChild("Arm Base", arm.basePos);
-                telemetry.addChild("Arm Difference", armDifference);
             }
 
-            { // Servo
-                arm.gripServo.setPosition(this.gamepad2.a ? Constants.SERVO_OPEN : Constants.SERVO_CLOSED);
-                telemetry.addChild("Servo pos", arm.gripServo.getPosition());
+            //servo
+            {
+                XRobot.arm.gripServo.setPosition(this.gamepad2.a ? Constants.SERVO_OPEN : Constants.SERVO_CLOSED);
+                XRobot.telemetry.addChild("Servo pos", XRobot.arm.gripServo.getPosition());
             }
             telemetry.addChild("RotationsBL", drive.BLDrive.getCurrentPosition());
             telemetry.addChild("RotationsBR", drive.BRDrive.getCurrentPosition());
             telemetry.addChild("RotationsFL", drive.FLDrive.getCurrentPosition());
             telemetry.addChild("RotationsFR", drive.FRDrive.getCurrentPosition());
 
-            TelemetryFunctions.sendTelemetry(this.telemetry, telemetry);
+            XRobot.updateSystems(this.telemetry);
         }
 
     }

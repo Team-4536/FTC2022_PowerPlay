@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.opModes.teleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="NA TeleOp Lift test", group="TeleOps")
 public class NATeleOpLiftTest extends LinearOpMode {
 

@@ -43,4 +43,10 @@ public abstract class DriveFunctions {
       d.BLDrive.setPower(speeds[2]);
       d.BRDrive.setPower(speeds[3]);
    }
+
+
+   public static void stop(DriveData d) {
+
+      setPower(d, new V2f(), 0);
+   }
 }

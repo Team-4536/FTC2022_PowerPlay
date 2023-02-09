@@ -31,7 +31,19 @@ public class V2f {
     }
 
 
+    public V2f add(V2f s) {
+        return new V2f(this.x + s.x, this.y + s.y); }
+
+    public V2f divide(float s) {
+        return new V2f(this.x / s, this.y / s); }
+
+    public V2f multiply(float s) {
+        return new V2f(this.x * s, this.y * s); }
     public float length(){
         return (float)Math.sqrt(this.x*this.x + this.y*this.y);
     }
+
+    public V2f normalized() {
+        double l = this.length();
+        return l == 0? new V2f() : this.divide(this.length()); }
 }
