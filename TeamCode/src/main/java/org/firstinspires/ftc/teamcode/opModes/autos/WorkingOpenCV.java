@@ -98,18 +98,20 @@ public class WorkingOpenCV extends LinearOpMode
 
                     for (AprilTagDetection tag : currentDetections) {
                         foundTag = tag.id;
+
+                        if(foundTag != -1) {
+                            XRobot.telemetry.addChild("Tag Found: ", foundTag); }
+                        else { XRobot.telemetry.addChild("No tag identified", ""); }
+
                         break;
                     }
                 }
+
+                XRobot.telemetry.addChild("Detection loop is running", "");
+                XRobot.updateSystems(this.telemetry);
             }
 
         }
-
-
-
-        if(foundTag != -1) {
-            XRobot.telemetry.addChild("Tag Found: ", foundTag); }
-        else { XRobot.telemetry.addChild("No tag identified", ""); }
 
         XRobot.updateSystems(this.telemetry);
 
@@ -128,6 +130,10 @@ public class WorkingOpenCV extends LinearOpMode
             XRobot.telemetry.addChild("current time", XRobot.nav.timer.seconds());
 
             XRobot.autoData.run();
+
+            if(foundTag != -1) {
+                XRobot.telemetry.addChild("Tag Found: ", foundTag); }
+            else { XRobot.telemetry.addChild("No tag identified", ""); }
 
             XRobot.updateSystems(this.telemetry);
         }
