@@ -119,18 +119,21 @@ public abstract class Constants {
             List.of(
                 new Stage.MoveTimed(new V2f(0, zonesPwr), outTime),
                 new Stage.MoveTimed(new V2f(-zonesPwr, 0), hTime),
-                new Stage.MoveTimed(new V2f(0, zonesPwr), vTime)
+                new Stage.MoveTimed(new V2f(0, zonesPwr), vTime),
+                new Stage.MoveTimed(new V2f(0, 0), 10000)
             ),
 
             List.of(
                     new Stage.MoveTimed(new V2f(0, zonesPwr), outTime),
-                    new Stage.MoveTimed(new V2f(0, zonesPwr), vTime)
+                    new Stage.MoveTimed(new V2f(0, zonesPwr), vTime),
+                    new Stage.MoveTimed(new V2f(0, 0), 10000)
             ),
 
             List.of(
                     new Stage.MoveTimed(new V2f(0, zonesPwr), outTime),
                     new Stage.MoveTimed(new V2f(zonesPwr, 0), hTime),
-                    new Stage.MoveTimed(new V2f(0, zonesPwr), vTime)
+                    new Stage.MoveTimed(new V2f(0, zonesPwr), vTime),
+                    new Stage.MoveTimed(new V2f(0, 0), 10000)
             )
     );
 

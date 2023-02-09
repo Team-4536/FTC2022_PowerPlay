@@ -53,6 +53,7 @@ public class autoScoring extends LinearOpMode {
         );
 
 
+
         waitForStart();
         while (!isStopRequested()) {
 

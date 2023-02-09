@@ -64,7 +64,7 @@ public class WorkingOpenCV extends LinearOpMode
 
         EncoderOdometry robotOdom = new EncoderOdometry(drive);
 
-        
+
 
         XRobot.init(this.hardwareMap, this.telemetry, true);
 
@@ -105,16 +105,17 @@ public class WorkingOpenCV extends LinearOpMode
                         break;
                     }
                 }
+
+
+                if(foundTag != -1) {
+                    XRobot.telemetry.addChild("Tag Found: ", foundTag); }
+                else { XRobot.telemetry.addChild("No tag identified", ""); }
+
+                XRobot.telemetry.addChild("Detection loop is running", "");
+                XRobot.updateSystems(this.telemetry);
             }
 
         }
-
-
-
-
-        if(foundTag != -1) {
-            XRobot.telemetry.addChild("Tag Found: ", foundTag); }
-        else { XRobot.telemetry.addChild("No tag identified", ""); }
 
         XRobot.updateSystems(this.telemetry);
 
@@ -130,17 +131,15 @@ public class WorkingOpenCV extends LinearOpMode
         XRobot.updateSystems(this.telemetry);
         while (opModeIsActive()) {
 
-
             XRobot.telemetry.addChild("current time", XRobot.nav.timer.seconds());
 
             XRobot.autoData.run();
 
+            if(foundTag != -1) {
+                XRobot.telemetry.addChild("Tag Found: ", foundTag); }
+            else { XRobot.telemetry.addChild("No tag identified", ""); }
+
             XRobot.updateSystems(this.telemetry);
-
-
-            robotOdom.EncoderReset(drive);
-
-            
         }
     }
 

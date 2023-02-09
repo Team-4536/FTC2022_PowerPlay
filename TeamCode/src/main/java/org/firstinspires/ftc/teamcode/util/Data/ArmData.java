@@ -13,6 +13,7 @@ public class ArmData {
 
     public final @NonNull DcMotor liftMotor;
     public int basePos = 0;
+    public PIDData liftPID = new PIDData(1, 0, 0);
 
     public final @NonNull Servo gripServo;
     public final @NonNull TouchSensor limitSwitch;
