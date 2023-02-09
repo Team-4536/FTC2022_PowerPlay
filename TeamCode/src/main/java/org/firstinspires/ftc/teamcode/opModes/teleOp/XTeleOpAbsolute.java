@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opModes.teleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.teamcode.functions.DriveFunctions;
 import org.firstinspires.ftc.teamcode.functions.NavFunctions;
@@ -28,6 +29,8 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
         XRobot.drivePID.target = XRobot.nav.heading;
         XRobot.updateSystems(this.telemetry);
+
+        PIDData armPID = new PIDData(/* tune u shithead */);
 
         while(opModeIsActive()){
 
@@ -99,6 +102,7 @@ public class XTeleOpAbsolute extends LinearOpMode{
                 float lift = this.gamepad2.left_stick_y;
 
 
+                // you need to tune lift speed and limits
                 if(XRobot.arm.limitSwitch.isPressed()){
                     lift = (lift > 0)? 0:lift; //clamps from going lower than b
                     XRobot.arm.basePos = XRobot.arm.liftMotor.getCurrentPosition();
@@ -108,12 +112,22 @@ public class XTeleOpAbsolute extends LinearOpMode{
                     lift = (lift < 0)?0:lift;
                 }
 
+                // what the fuck
                 float liftSpeed = 2 * -lift;
+                armPID.target += liftSpeed * XRobot.nav.dt;
 
 
-                XRobot.arm.liftMotor.setPower(liftSpeed);
-                XRobot.telemetry.addChild("Lift speed", liftSpeed);
-                XRobot.telemetry.addChild("Arm Difference", armDifference);
+
+                float out = PIDFunctions.updatePID(armPID, armDifference, (float)XRobot.nav.dt);
+                XRobot.arm.liftMotor.setPower(out);
+
+
+                XRobot.telemetry.addChild("Arm target delta", liftSpeed);
+                XRobot.telemetry.addChild("virtual arm height", armDifference);
+                XRobot.telemetry.addChild("Arm PID Target", armPID.target);
+                XRobot.telemetry.addChild("Arm base", XRobot.arm.basePos);
+
+                XRobot.telemetry.addChild("PID output", out);
             }
 
             //servo
