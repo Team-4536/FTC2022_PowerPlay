@@ -30,7 +30,7 @@ public class XTeleOpAbsolute extends LinearOpMode{
         XRobot.drivePID.target = XRobot.nav.heading;
         XRobot.updateSystems(this.telemetry);
 
-        PIDData armPID = new PIDData(/* tune u shithead */);
+        PIDData armPID = new PIDData(0.001f,0,0);
 
         while(opModeIsActive()){
 
@@ -108,18 +108,18 @@ public class XTeleOpAbsolute extends LinearOpMode{
                     XRobot.arm.basePos = XRobot.arm.liftMotor.getCurrentPosition();
                 }
 
-                if(armDifference > 12000){
+                if(armDifference > 4600){
                     lift = (lift < 0)?0:lift;
                 }
 
                 // what the fuck
-                float liftSpeed = 2 * -lift;
+                float liftSpeed = 1600 * -lift;
                 armPID.target += liftSpeed * XRobot.nav.dt;
 
 
 
                 float out = PIDFunctions.updatePID(armPID, armDifference, (float)XRobot.nav.dt);
-                XRobot.arm.liftMotor.setPower(out);
+                XRobot.arm.liftMotor.setPower(out);////--------
 
 
                 XRobot.telemetry.addChild("Arm target delta", liftSpeed);
