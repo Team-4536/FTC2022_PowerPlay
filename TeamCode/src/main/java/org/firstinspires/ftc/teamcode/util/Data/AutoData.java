@@ -20,6 +20,7 @@ public class AutoData {
         if(this.stages.get(this.index).run()) {
 
             this.index += 1;
+            if(this.index >= this.stages.size()) { return; }
             this.stages.get(this.index).init();
         }
     }
