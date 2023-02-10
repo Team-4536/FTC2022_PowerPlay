@@ -94,6 +94,7 @@ public class WorkingOpenCV extends LinearOpMode
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
             if (foundTag == -1) {
                 XRobot.telemetry.addChild("length", currentDetections.size());
+                XRobot.updateSystems(this.telemetry);
                 if (currentDetections.size() != 0) {
 
                     for (AprilTagDetection tag : currentDetections) {
