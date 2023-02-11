@@ -63,8 +63,8 @@ public class WorkingOpenCV extends LinearOpMode
     public void runOpMode() {
 
         XRobot.init(this.hardwareMap, this.telemetry, true);
-        XRobot.telemetry.addChild("amoongus"," open");
-        XRobot.updateSystems(this.telemetry);
+
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
@@ -74,13 +74,11 @@ public class WorkingOpenCV extends LinearOpMode
             @Override
             public void onOpened() {
                 camera.startStreaming(800, 448, OpenCvCameraRotation.UPRIGHT);
-                XRobot.telemetry.addChild("amoongus"," open");
             }
 
             @Override
             public void onError(int errorCode) {
-                XRobot.telemetry.addChild("amoongus","error");
-                //XRobot.updateSystems(this.telemetry);
+
             }
         });
 
@@ -92,11 +90,10 @@ public class WorkingOpenCV extends LinearOpMode
 
 
         while(!isStopRequested() && foundTag == -1){
-            XRobot.telemetry.addChild("is searching 1", "");
-            XRobot.updateSystems(this.telemetry);
+
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
             if (foundTag == -1) {
-                XRobot.telemetry.addChild("is searching 2", "");
+                XRobot.telemetry.addChild("length", currentDetections.size());
                 XRobot.updateSystems(this.telemetry);
                 if (currentDetections.size() != 0) {
 

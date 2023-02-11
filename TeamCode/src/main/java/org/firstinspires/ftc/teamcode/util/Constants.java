@@ -103,9 +103,9 @@ public abstract class Constants {
 
 
     static final float zonesPwr = 0.23f;
-    static final float hTime = 2.4f;
-    static final float vTime = 4.2f;
-    static final float outTime = 0.5f;
+    static final float hTime = 3.5f;
+    static final float vTime = 5.0f;
+    static final float outTime = 2.0f;
 
     public static List<List<Stage>> parkingRoutines = List.of(
 
@@ -114,21 +114,20 @@ public abstract class Constants {
                 new Stage.MoveTimed(new V2f(0, zonesPwr), outTime),
                 new Stage.MoveTimed(new V2f(-zonesPwr, 0), hTime),
                 new Stage.MoveTimed(new V2f(0, zonesPwr), vTime),
-                    new Stage.MoveTimed(new V2f(0, 0), 99999999)
+                    new Stage.MoveTimed(new V2f(0, 0), 99999)
             ),
 
             List.of(
                     new Stage.MoveTimed(new V2f(0, zonesPwr), outTime),
                     new Stage.MoveTimed(new V2f(0, zonesPwr), vTime),
-                    new Stage.MoveTimed(new V2f(0, 0), 99999999)
-
+                    new Stage.MoveTimed(new V2f(0, 0), 99999)
             ),
 
             List.of(
                     new Stage.MoveTimed(new V2f(0, zonesPwr), outTime),
                     new Stage.MoveTimed(new V2f(zonesPwr, 0), hTime),
                     new Stage.MoveTimed(new V2f(0, zonesPwr), vTime),
-                    new Stage.MoveTimed(new V2f(0, 0), 99999999)
+                    new Stage.MoveTimed(new V2f(0, 0), 99999)
             )
     );
 
