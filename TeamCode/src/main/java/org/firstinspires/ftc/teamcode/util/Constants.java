@@ -78,7 +78,7 @@ public abstract class Constants {
 
         a.gripServo.setPosition(SERVO_CLOSED);
         while(!a.limitSwitch.isPressed()){
-            a.liftMotor.setPower(-0.5f);
+            a.liftMotor.setPower(0.5f);
         }
 
         a.basePos = a.liftMotor.getCurrentPosition();
