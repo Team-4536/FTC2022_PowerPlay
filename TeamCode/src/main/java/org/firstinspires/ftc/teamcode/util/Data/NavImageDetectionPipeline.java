@@ -162,13 +162,13 @@ public class NavImageDetectionPipeline {
 
 
     private void registerTarget(VuforiaTrackables targets, int targetIndex, String targetName,
-                        float dx, float dy, float dz,
-                        float rx, float ry, float rz) {
+                                double dx, double dy, double dz,
+                                double rx, double ry, double rz) {
 
         VuforiaTrackable aTarget = targets.get(targetIndex);
         aTarget.setName(targetName);
-        aTarget.setLocation(OpenGLMatrix.translation(dx, dy, dz)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, rx, ry, rz)));
+        aTarget.setLocation(OpenGLMatrix.translation((float) dx,(float) dy,(float) dz)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, (float)rx, (float)ry, (float)rz)));
 
         this.imagePositions.add(new V2f(dx, dy));
     }

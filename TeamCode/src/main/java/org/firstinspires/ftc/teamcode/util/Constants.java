@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.sun.tools.javac.util.List;
 
 import org.firstinspires.ftc.teamcode.util.Data.ArmData;
@@ -8,25 +9,25 @@ import org.firstinspires.ftc.teamcode.util.Data.TelemetryData;
 import java.util.ArrayList;
 
 
-public abstract class Constants {
 
+@Config
+public class Constants {
 
     public static final String TELEMETRY_INDENT = "        ";
-
-    public static final float MM_PER_INCH      = 25.4f;
-    public static final float IMG_HEIGHT_MM    = 6 * MM_PER_INCH;          // the height of the center of the target image above the floor
-    public static final float HALF_FIELD_MM    = 72 * MM_PER_INCH;
-    public static final float HALF_TILE_MM     = 12 * MM_PER_INCH;
-    public static final float TILE_MM          = 36 * MM_PER_INCH;
-
+    //public static float MM_PER_INCH = 25.4f;
+    public static double MM_PER_INCH = 25.4;
+    public static double IMG_HEIGHT_MM = 6 * MM_PER_INCH;          // the height of the center of the target image above the floor
+    public static  double HALF_FIELD_MM    = 72 * MM_PER_INCH;
+    public static  double HALF_TILE_MM     = 12 * MM_PER_INCH;
+    public static  double TILE_MM          = 36 * MM_PER_INCH;
 
     // These are for nav,
     // offset of the camera lens from the center of the bot
     // in MM
     // all bullshit btw
-    final float CAMERA_FORWARD      = 0.0f * MM_PER_INCH;
-    final float CAMERA              = 6.0f * MM_PER_INCH;
-    final float CAMERA_LEFT         = 0.0f * MM_PER_INCH;
+    final double CAMERA_FORWARD      = 0.0 * MM_PER_INCH;
+    final double CAMERA              = 6.0 * MM_PER_INCH;
+    final double CAMERA_LEFT         = 0.0 * MM_PER_INCH;
 
 
 
@@ -60,29 +61,29 @@ public abstract class Constants {
 
 
 
-    public static final float TURN_CUTOFF = 0.5f;
+    public static double TURN_CUTOFF = 0.5;
 
-    public static final float defaultXDriveSpeed = 0.25f;
-    public static final float defaultXTurnSpeed = 1.0f;
-    public static final float maxXTurnSpeed = 3.0f;
+    public static double defaultXDriveSpeed = 0.25;
+    public static double defaultXTurnSpeed = 1.0;
+    public static double maxXTurnSpeed = 3.0;
 
     public static final boolean[] XFlipMap = {
             true, false, true, false
     };
 
 
-    public static final float SERVO_CLOSED = 0.55f;
-    public static final float SERVO_OPEN =1.0f;
+    public static double SERVO_CLOSED = 0.55;
+    public static double SERVO_OPEN =1.0;
 
     public static void initArm(ArmData a){
 
         a.gripServo.setPosition(SERVO_CLOSED);
         while(!a.limitSwitch.isPressed()){
-            a.liftMotor.setPower(0.5f);
+            a.liftMotor.setPower(0.5);
         }
 
         a.basePos = a.liftMotor.getCurrentPosition();
-        a.liftMotor.setPower(0.0f);
+        a.liftMotor.setPower(0.0);
     }
 
 
@@ -94,18 +95,18 @@ public abstract class Constants {
 
 
 
-    public static final float mechStrafeMod = 0.9f;
-    public static final float mechDriveMod = 0.6f;
+    public static  double mechStrafeMod = 0.9;
+    public static  double mechDriveMod = 0.0;
 
 
 
 
 
 
-    static final float zonesPwr = 0.23f;
-    static final float hTime = 3.5f;
-    static final float vTime = 5.0f;
-    static final float outTime = 2.0f;
+    static final double zonesPwr = 0.23f;
+    static final double hTime = 3.5f;
+    static final double vTime = 5.0f;
+    static final double outTime = 2.0f;
 
     public static List<List<Stage>> parkingRoutines = List.of(
 

@@ -41,7 +41,7 @@ public class PIDArmDemo extends LinearOpMode {
             NavFunctions.updateDt(nav);
             armPID.target += this.gamepad1.left_stick_y * 10 * nav.dt;
 
-            float pidOut = PIDFunctions.updatePID(armPID, liftMotor.getCurrentPosition(), (float)nav.dt);
+            double pidOut = PIDFunctions.updatePID(armPID, liftMotor.getCurrentPosition(), nav.dt);
             liftMotor.setPower(pidOut);
             telemetry.addChild("Arm encoder", liftMotor.getCurrentPosition());
             telemetry.addChild("Target pos", armPID.target);

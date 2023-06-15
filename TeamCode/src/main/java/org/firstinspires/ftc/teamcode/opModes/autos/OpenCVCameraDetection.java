@@ -41,7 +41,7 @@ public class OpenCVCameraDetection extends LinearOpMode
         OpenCvCamera camera;
         AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
-        static final double FEET_PER_METER = 3.28084;
+        static  double FEET_PER_METER = 3.28084;
 
         // Lens intrinsics
         // UNITS ARE PIXELS
@@ -97,10 +97,10 @@ public class OpenCVCameraDetection extends LinearOpMode
                                 XRobot.nav.timer.reset();
                         }
 
-                        float PIDOut = PIDFunctions.updatePIDAngular(
+                        double PIDOut = PIDFunctions.updatePIDAngular(
                                 XRobot.drivePID,
                                 XRobot.nav.heading,
-                                (float)XRobot.nav.dt);
+                                XRobot.nav.dt);
 
                         ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
                         if (foundTag == -1) {

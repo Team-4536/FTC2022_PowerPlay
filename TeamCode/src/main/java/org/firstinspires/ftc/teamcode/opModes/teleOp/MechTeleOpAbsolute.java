@@ -75,10 +75,10 @@ public class MechTeleOpAbsolute extends LinearOpMode {
 
 
             //get angle correction
-            float PIDOut = PIDFunctions.updatePIDAngular(
+            double PIDOut = PIDFunctions.updatePIDAngular(
                     drivePID,
                     nav.heading,
-                    (float)nav.dt);
+                    nav.dt);
 
             //rotate drive input to be relative to start angle, not current angle
             V2f in = new V2f(l.x, l.y);

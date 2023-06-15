@@ -46,13 +46,13 @@ public class XTeleOpAbsolute extends LinearOpMode{
 
 
             // angles
-            float PIDOut = 0;
+            double PIDOut = 0;
             {
                 //change target angle with input
                 if (r.length() >= Constants.TURN_CUTOFF) {
                     if (!gamepad1.left_bumper) {
 
-                        float mod = Constants.defaultXTurnSpeed
+                        double mod = Constants.defaultXTurnSpeed
                                 + ((Constants.maxXTurnSpeed - Constants.defaultXTurnSpeed) * this.gamepad1.left_trigger);
                         XRobot.drivePID.target = PIDFunctions.angleWrap(XRobot.drivePID.target - (r.x * mod));
                     } else {
@@ -83,7 +83,7 @@ public class XTeleOpAbsolute extends LinearOpMode{
                 }
 
                 //multiplier for drive speed.
-                float mod = Constants.defaultXDriveSpeed
+                double mod = Constants.defaultXDriveSpeed
                         + ((1-Constants.defaultXDriveSpeed)*this.gamepad1.right_trigger);
 
 
@@ -99,7 +99,7 @@ public class XTeleOpAbsolute extends LinearOpMode{
             //lift
             {
                 int armDifference = XRobot.arm.liftMotor.getCurrentPosition() - XRobot.arm.basePos;
-                float lift = this.gamepad2.left_stick_y;
+                double lift = this.gamepad2.left_stick_y;
 
 
                 // you need to tune lift speed and limits
@@ -113,12 +113,12 @@ public class XTeleOpAbsolute extends LinearOpMode{
                 }
 
                 // what the fuck
-                float liftSpeed = 1600 * -lift;
+                double liftSpeed = 1600 * -lift;
                 armPID.target += liftSpeed * XRobot.nav.dt;
 
 
 
-                float out = PIDFunctions.updatePID(armPID, armDifference, (float)XRobot.nav.dt);
+                double out = PIDFunctions.updatePID(armPID, armDifference, (float)XRobot.nav.dt);
                 XRobot.arm.liftMotor.setPower(out);////--------
 
 

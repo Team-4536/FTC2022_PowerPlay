@@ -2,18 +2,18 @@ package org.firstinspires.ftc.teamcode.util.Data;
 
 public class PIDData {
 
-    public float Kp;
-    public float Ki;
-    public float Kd;
+    public double Kp;
+    public double Ki;
+    public double Kd;
 
-    public float target = 0;
-    public float iSum = 0;
-    public float prevErr = 0;
-
-
+    public double target = 0;
+    public double iSum = 0;
+    public double prevErr = 0;
 
 
-    public PIDData(float kp, float ki, float kd){
+
+
+    public PIDData(double kp, double ki, double kd){
         this.Kp = kp;
         this.Ki = ki;
         this.Kd = kd;

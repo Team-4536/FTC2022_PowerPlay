@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -26,6 +27,8 @@ public abstract class XRobot {
     public static AutoData autoData;
 
 
+
+
     public static void init(HardwareMap hardwareMap, Telemetry t, boolean resetArm) {
 
 
@@ -41,6 +44,11 @@ public abstract class XRobot {
 
         // TUNE YOU DUMBASS
         XRobot.drivePID = new PIDData(0.015f, 0.0f, -0.2f);
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        Telemetry dashboardTelemetry = dashboard.getTelemetry();
+
+        dashboardTelemetry.addData("kp", XRobot.drivePID.Kp);
+        dashboardTelemetry.update();
 
         autoData = new AutoData();
 

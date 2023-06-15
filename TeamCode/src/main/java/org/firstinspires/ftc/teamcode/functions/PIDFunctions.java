@@ -5,39 +5,39 @@ import org.firstinspires.ftc.teamcode.util.Data.PIDData;
 public abstract class PIDFunctions {
 
 
-    public static float updatePIDAngular(PIDData d, float pos, float dt){
+    public static double updatePIDAngular(PIDData d, double pos, double dt){
 
         //all code yoinked from ctrl alt ftc thanks lol
 
         // calculate the error in degrees
-        float error = PIDFunctions.angleWrap(d.target - pos);
+        double error = PIDFunctions.angleWrap(d.target - pos);
         while(error > 180){ error -= 360; }
 
         // rate of change of the error
-        float derivative = (error - d.prevErr) * dt;
+        double derivative = (error - d.prevErr) * dt;
 
         // sum of all error over time
         d.iSum += error * dt;
 
-        float out = (d.Kp * error) + (d.Ki * d.iSum) + (d.Kd * derivative);
+        double out = (d.Kp * error) + (d.Ki * d.iSum) + (d.Kd * derivative);
 
         d.prevErr = error;
 
         return out;
     }
 
-    public static float updatePID(PIDData d, float pos, float dt){
+    public static double updatePID(PIDData d, double pos, double dt){
 
         // calculate the error in degrees
-        float error = d.target - pos;
+        double error = d.target - pos;
 
         // rate of change of the error
-        float derivative = (error - d.prevErr) * dt;
+        double derivative = (error - d.prevErr) * dt;
 
         // sum of all error over time
         d.iSum += error * dt;
 
-        float out = (d.Kp * error) + (d.Ki * d.iSum) + (d.Kd * derivative);
+        double out = (d.Kp * error) + (d.Ki * d.iSum) + (d.Kd * derivative);
 
         d.prevErr = error;
 
@@ -48,9 +48,9 @@ public abstract class PIDFunctions {
     //                                                                      V these degree symbols are cool
     // This function normalizes the angle so it returns a value between -180° and 180° instead of 0° to 360°.
     //YOINK https://www.ctrlaltftc.com/practical-examples/controlling-heading
-    public static float angleWrap(float deg) {
+    public static double angleWrap(double deg) {
 
-        float modifiedAngle = deg % 360;
+        double modifiedAngle = deg % 360;
         return ((modifiedAngle + 360) % 360);
     }
 

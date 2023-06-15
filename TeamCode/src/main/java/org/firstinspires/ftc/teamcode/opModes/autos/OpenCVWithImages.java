@@ -123,10 +123,10 @@ public class OpenCVWithImages extends LinearOpMode
             NavFunctions.updateDt(nav);
             NavFunctions.updateHeading(nav);
 
-            float PIDOut = PIDFunctions.updatePIDAngular(
+            double PIDOut = PIDFunctions.updatePIDAngular(
                     drivePID,
                     nav.heading,
-                    (float) nav.dt);
+                    nav.dt);
 
 
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();

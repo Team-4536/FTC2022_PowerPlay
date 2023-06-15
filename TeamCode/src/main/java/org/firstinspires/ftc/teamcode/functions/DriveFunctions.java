@@ -14,19 +14,19 @@ public abstract class DriveFunctions {
    // m&r need to be between 0 and 1
    //sets the power of drive motors so that the bot will move by m and turn by r
    //NTS: axis from IMU is flipped, so its flipped here too. + turn = turn left
-   public static void setPower(@NonNull DriveData d, @NonNull V2f m, float turn) {
-      float drive = m.y;
-      float strafe = m.x;
+   public static void setPower(@NonNull DriveData d, @NonNull V2f m, double turn) {
+      double drive = m.y;
+      double strafe = m.x;
 
 
-      float[] speeds = {
+      double[] speeds = {
               (drive + strafe - turn),
               (drive - strafe + turn),
               (drive - strafe - turn),
               (drive + strafe + turn),
       };
 
-      float max = Math.abs(speeds[0]);
+      double max = Math.abs(speeds[0]);
       for (int i = 1; i < speeds.length; i++) {
          if (max < Math.abs(speeds[i])) {
             max = Math.abs(speeds[i]);

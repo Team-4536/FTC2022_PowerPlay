@@ -6,6 +6,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XZY;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -45,6 +47,7 @@ public class autoScoring extends LinearOpMode {
 
         XRobot.init(this.hardwareMap, this.telemetry, false);
         NavImageDetectionPipeline imagePip = new NavImageDetectionPipeline(this.hardwareMap);
+        TelemetryPacket packet = new TelemetryPacket();
 
 
         XRobot.autoData.stages = List.of(
@@ -58,7 +61,9 @@ public class autoScoring extends LinearOpMode {
 
             XRobot.updateSystems(this.telemetry);
             imagePip.update();
-
+            packet.fieldOverlay()
+                    .setFill("blue")
+                    .fillRect(-20, -20, 40, 40);
             XRobot.autoData.run();
 
             // ??????????????????????????????????????

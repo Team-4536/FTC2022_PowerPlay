@@ -49,10 +49,10 @@ public abstract class Stage {
         @Override
         public boolean run() {
 
-            float PIDOut = PIDFunctions.updatePIDAngular(
+            double PIDOut = PIDFunctions.updatePIDAngular(
                     XRobot.drivePID,
                     XRobot.nav.heading,
-                    (float)XRobot.nav.dt
+                    XRobot.nav.dt
             );
 
             DriveFunctions.setPower(
@@ -88,10 +88,10 @@ public abstract class Stage {
 
 
 
-            float PIDOut = PIDFunctions.updatePIDAngular(
+            double PIDOut = PIDFunctions.updatePIDAngular(
                     XRobot.drivePID,
                     XRobot.nav.heading,
-                    (float) XRobot.nav.dt);
+                    XRobot.nav.dt);
 
 
 
