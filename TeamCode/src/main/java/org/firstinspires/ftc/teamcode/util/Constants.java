@@ -4,9 +4,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.sun.tools.javac.util.List;
 
 import org.firstinspires.ftc.teamcode.util.Data.ArmData;
-import org.firstinspires.ftc.teamcode.util.Data.TelemetryData;
-
-import java.util.ArrayList;
 
 
 
@@ -93,12 +90,8 @@ public class Constants {
 
 
 
-
-
     public static  double mechStrafeMod = 0.9;
     public static  double mechDriveMod = 0.0;
-
-
 
 
 
